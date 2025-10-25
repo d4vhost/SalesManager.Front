@@ -1,25 +1,72 @@
 /* src/styles/login.css */
 .login-layout {
   display: grid;
-  grid-template-columns: 1fr 1fr; /* Dos columnas iguales */
+  grid-template-columns: 1fr 1fr; /* 50/50 */
   min-height: 100vh;
   width: 100%;
+  background-color: var(--color-surface);
 }
 
-/* Columna Izquierda (Imagen) */
+/* Columna Izquierda (Formulario) */
+.login-form-wrapper {
+  grid-column: 1 / 2; /* <-- CAMBIO: Formulario a la izquierda */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+}
+.login-box {
+  width: 100%;
+  max-width: 420px;
+}
+.login-title {
+  font-size: 2.25rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--color-text);
+  margin-bottom: 0.5rem;
+}
+.login-subtitle {
+  color: var(--color-text-secondary);
+  font-size: 1.1rem;
+  margin-bottom: 2.5rem;
+}
+
+/* Footer del Login con link "Volver" */
+.login-footer {
+  margin-top: 2.5rem;
+}
+.back-link {
+  color: var(--color-text-secondary);
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: var(--transition-fast);
+}
+.back-link:hover {
+  color: var(--color-primary);
+  transform: translateX(-4px); /* Flecha se mueve */
+  text-decoration: none;
+}
+
+/* Columna Derecha (Imagen) */
 .login-image-wrapper {
-  grid-column: 1 / 2;
+  grid-column: 2 / 3; /* <-- CAMBIO: Imagen a la derecha */
   position: relative;
-  background-color: var(--color-dark-bg);
   overflow: hidden;
+  background-color: var(--color-dark-bg);
 }
 .login-image {
   width: 100%;
   height: 100vh;
-  object-fit: cover; /* La imagen cubre todo el div */
-  opacity: 0.5; /* Más oscura */
-  transform: scale(1.05);
-  filter: grayscale(30%);
+  object-fit: cover;
+  opacity: 0.45;
+  /* Nueva imagen de Unsplash: tienda/retail moderna */
+  background-image: url('https://images.unsplash.com/photo-1522684234380-c56a484cff2e?q=80&w=1887&auto=format&fit=crop');
+  background-size: cover;
+  background-position: center;
 }
 .image-overlay {
   position: absolute;
@@ -32,74 +79,27 @@
   justify-content: flex-end;
   padding: 4rem 3.5rem;
   color: white;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 20%, transparent 70%);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 20%, transparent 70%);
 }
 .overlay-title {
   font-size: 3rem;
   font-weight: 800;
-  margin-bottom: 0.5rem;
-  letter-spacing: -1px;
 }
 .overlay-text {
   font-size: 1.3rem;
   color: rgba(255, 255, 255, 0.8);
-  font-weight: 400;
 }
 
-/* Columna Derecha (Formulario) */
-.login-form-wrapper {
-  grid-column: 2 / 3;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 3rem;
-  background-color: var(--color-surface);
-}
-
-.login-box {
-  width: 100%;
-  max-width: 420px;
-}
-
-.login-title {
-  font-size: 2.25rem;
-  font-weight: 800;
-  letter-spacing: -0.5px;
-  color: var(--color-text);
-  margin-bottom: 0.5rem;
-}
-
-.login-subtitle {
-  color: var(--color-text-secondary);
-  font-size: 1.1rem;
-  margin-bottom: 2.5rem;
-}
-
-.login-footer {
-  margin-top: 2rem;
-  text-align: center;
-  font-size: 0.95rem;
-}
-.login-footer p {
-  color: var(--color-text-secondary);
-}
-
-/* Media Query para pantallas más pequeñas (móviles) */
+/* Media Query (Móvil) */
 @media (max-width: 992px) {
   .login-layout {
-    grid-template-columns: 1fr; /* Una sola columna */
+    grid-template-columns: 1fr; /* 1 columna */
   }
   .login-image-wrapper {
-    display: none; /* Oculta la imagen */
+    display: none; /* Oculta imagen */
   }
   .login-form-wrapper {
-    grid-column: 1 / -1;
-    align-items: flex-start;
+    grid-column: 1 / -1; /* Ocupa todo */
     padding-top: 5rem;
-    min-height: 100vh;
-  }
-  .login-box {
-     box-shadow: none;
-     padding: 0;
   }
 }

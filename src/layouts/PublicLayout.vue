@@ -1,15 +1,15 @@
 <script setup>
 import { RouterView } from 'vue-router'
-import Navbar from '@/components/Navbar.vue'
-import Footer from '@/components/Footer.vue'
+import PublicHeader from '@/components/PublicHeader.vue' // <-- CAMBIO
+import PublicFooter from '@/components/PublicFooter.vue' // <-- CAMBIO
 </script>
 
 <template>
   <div class="public-layout">
-    <Navbar />
+    <PublicHeader />
     <main class="public-content">
       <RouterView />
     </main>
-    <Footer />
+    <PublicFooter />
   </div>
 </template>

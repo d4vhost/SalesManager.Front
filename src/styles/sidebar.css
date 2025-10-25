@@ -1,19 +1,18 @@
 /* src/styles/sidebar.css */
 .sidebar {
   width: 260px;
-  background-color: #ffffff; /* Fondo blanco */
-  color: var(--color-text);
+  background-color: var(--color-dark-bg); /* Fondo Negro */
+  color: #f8f9fa;
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
-  border-right: 1px solid var(--color-border);
+  border-right: 1px solid #333; /* Borde sutil */
   z-index: 100;
-  transition: width 0.3s ease;
 }
 
 .sidebar-header {
   padding: 1.5rem;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid #333;
 }
 .sidebar-brand {
   display: flex;
@@ -21,59 +20,57 @@
   gap: 0.75rem;
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--color-text);
+  color: var(--color-surface);
   text-decoration: none;
 }
-.sidebar-brand .fa-chart-line {
-  color: var(--color-primary);
+.sidebar-brand .fa-chart-pie {
+  color: var(--color-primary); /* Icono Verde */
 }
 
 .nav-links {
   list-style: none;
   margin: 0;
-  padding: 1rem 0.75rem; /* Más padding */
+  padding: 1rem 0.75rem;
   flex-grow: 1;
 }
 
 .nav-links li a {
   display: flex;
   align-items: center;
-  gap: 0.85rem; /* Espacio para icono */
-  padding: 0.85rem 1rem; /* Padding interno */
+  gap: 0.85rem;
+  padding: 0.85rem 1rem;
   margin: 0.25rem 0;
-  color: var(--color-text-secondary);
+  color: #a0aec0; /* Gris claro */
   text-decoration: none;
   border-radius: var(--border-radius);
   transition: var(--transition-fast);
-  font-weight: 600; /* Texto más grueso */
+  font-weight: 600;
   font-size: 0.95rem;
 }
 
 .nav-links li a:hover {
-  background-color: var(--color-background); /* Fondo gris claro al pasar */
-  color: var(--color-text);
+  background-color: #333; /* Gris oscuro hover */
+  color: #ffffff;
 }
 
 .nav-links li a.router-link-exact-active {
-  background-color: var(--color-primary-light); /* Fondo azul claro */
-  color: var(--color-primary); /* Texto azul */
+  background-color: var(--color-primary); /* Verde activo */
+  color: #ffffff;
   font-weight: 700;
 }
-/* Icono activo */
 .nav-links li a.router-link-exact-active svg {
-  color: var(--color-primary);
+  color: #ffffff;
 }
 
 .sidebar-footer {
   padding: 1.5rem;
-  border-top: 1px solid var(--color-border);
-  background-color: var(--color-background); /* Fondo gris claro */
+  border-top: 1px solid #333;
 }
 
 .user-email {
   display: block;
   font-size: 0.9rem;
-  color: var(--color-text-secondary);
+  color: #a0aec0;
   margin-bottom: 1rem;
   word-wrap: break-word;
   font-weight: 500;
@@ -85,9 +82,9 @@
   padding: 0.7rem;
   font-size: 0.95rem;
   font-weight: 600;
-  background-color: var(--color-surface);
-  color: var(--color-error);
-  border: 1px solid var(--color-border);
+  background-color: #333;
+  color: white;
+  border: none;
   border-radius: var(--border-radius);
   cursor: pointer;
   transition: var(--transition-fast);
@@ -99,6 +96,4 @@
 
 .btn-logout:hover {
   background-color: var(--color-error);
-  border-color: var(--color-error);
-  color: white;
 }

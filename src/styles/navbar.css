@@ -1,11 +1,10 @@
 /* src/styles/navbar.css */
 .navbar {
   width: 100%;
-  padding: 1.5rem 0; /* Más alto */
-  background-color: rgba(255, 255, 255, 0.8); /* Blanco semi-transparente */
-  backdrop-filter: blur(12px); /* Efecto "glassmorphism" estilo Apple */
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  padding: 1.5rem 0;
+  background-color: rgba(255, 255, 255, 0.85); /* Efecto cristal */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--color-border);
   position: sticky;
   top: 0;
@@ -14,28 +13,26 @@
 
 .navbar-content {
   display: flex;
-  justify-content: space-between;
+  justify-content: center; /* Centramos el logo ya que no hay más links */
   align-items: center;
+  max-width: 1140px;
+  margin: 0 auto;
+  width: 90%;
 }
 
 .navbar-brand {
-  font-size: 1.75rem;
-  font-weight: 800; /* Más grueso */
-  color: var(--color-text); /* Negro, no azul */
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: var(--color-text);
   text-decoration: none;
   display: flex;
   align-items: center;
   gap: 0.6rem;
+  transition: var(--transition-fast);
 }
 .navbar-brand .fa-chart-line {
-  color: var(--color-primary); /* Icono sí es azul */
-}
-.navbar-brand:hover {
   color: var(--color-primary);
 }
-
-.navbar-nav .btn {
-  font-weight: 600;
-  padding: 0.6rem 1.2rem;
-  font-size: 0.95rem;
+.navbar-brand:hover {
+  color: var(--color-primary-dark);
 }

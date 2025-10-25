@@ -4,15 +4,10 @@ import { createPinia } from 'pinia'
 // --- 1. Importar Font Awesome ---
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-// Importa solo los iconos que usaremos para mantener el tamaño del paquete pequeño
+// --- Importa los iconos específicos que usaremos ---
 import { 
-    faShoppingCart, // Icono para el POS
-    faShieldAlt,    // Icono para Admin
-    faSignOutAlt,   // Icono de Logout
-    faArrowRight,   // Icono para botones
-    faBoxOpen,      // Icono para "Stock"
-    faUsers,        // Icono para "Clientes"
-    faBolt          // Icono para "Rápido"
+    faStore, faFileInvoiceDollar, faUsers, faBoxOpen, 
+    faArrowRight, faArrowLeft, faChartPie, faSignOutAlt
 } from '@fortawesome/free-solid-svg-icons'
 
 // --- 2. Importar Vistas y Router ---
@@ -23,15 +18,17 @@ import router from './router' // Asumimos que existe src/router/index.js
 // El orden importa: de más general a más específico.
 import './styles/base.css'    // Variables y reset
 import './styles/layout.css'  // Estilos de los contenedores de layout
-import './styles/navbar.css'  // Estilos del Navbar público
-import './styles/footer.css'  // Estilos del Footer público
+import './styles/header-footer.css' // Estilos para el header y footer públicos
 import './styles/sidebar.css' // Estilos de la barra lateral (layout privado)
 import './styles/home.css'    // Estilos para la página Home
 import './styles/login.css'   // Estilos para la página Login
 
 // --- 4. Configurar App ---
 // Añade los iconos a la librería
-library.add(faShoppingCart, faShieldAlt, faSignOutAlt, faArrowRight, faBoxOpen, faUsers, faBolt)
+library.add(
+    faStore, faFileInvoiceDollar, faUsers, faBoxOpen, 
+    faArrowRight, faArrowLeft, faChartPie, faSignOutAlt
+)
 
 const app = createApp(App)
 

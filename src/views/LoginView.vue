@@ -13,8 +13,11 @@ const error = ref(null)
 const handleLogin = async () => {
   error.value = null
   try {
+    // Llama a la acción 'login' del store
     await authStore.login(credentials.value)
+    // El router guard (en index.js) redirigirá a /app/pos
   } catch (err) {
+    // Atrapa el error lanzado por el store
     error.value = err.message || 'Error desconocido. Intente de nuevo.'
   }
 }
@@ -22,18 +25,11 @@ const handleLogin = async () => {
 
 <template>
   <div class="login-layout">
-    <div class="login-image-wrapper">
-      <img src="https://source.unsplash.com/random/800x1200/?store,minimal" alt="Tienda" class="login-image">
-      <div class="image-overlay">
-        <h2 class="overlay-title">SalesManager</h2>
-        <p class="overlay-text">Tu punto de venta inteligente.</p>
-      </div>
-    </div>
-
+    
     <div class="login-form-wrapper">
       <div class="login-box">
-        <h1 class="login-title">Bienvenido de Nuevo</h1>
-        <p class="login-subtitle">Ingresa tus credenciales para acceder al sistema.</p>
+        <h1 class="login-title">Acceso al Sistema</h1>
+        <p class="login-subtitle">Ingresa tus credenciales para continuar.</p>
 
         <form @submit.prevent="handleLogin" class="login-form">
           
@@ -49,7 +45,7 @@ const handleLogin = async () => {
               class="form-control" 
               v-model="credentials.email" 
               required
-              placeholder="ej: correo@empresa.com"
+              placeholder="ej: admin@salesmanager.com"
             />
           </div>
           
@@ -65,15 +61,26 @@ const handleLogin = async () => {
             />
           </div>
 
-          <button type="submit" class="btn btn-primary btn-block">
+          <button type="submit" class="btn btn-primary btn-block btn-lg">
             Ingresar
           </button>
         </form>
 
         <div class="login-footer">
-          <p>¿Aún no tienes cuenta? <RouterLink to="/">Contacta al administrador</RouterLink></p>
+          <RouterLink to="/" class="back-link">
+            <font-awesome-icon :icon="['fas', 'fa-arrow-left']" />
+            Volver a la página de inicio
+          </RouterLink>
         </div>
       </div>
     </div>
+
+    <div class="login-image-wrapper">
+      <div class="login-image"></div> <div class="image-overlay">
+        <h2 class="overlay-title">SalesManager</h2>
+        <p class="overlay-text">Facturación simple. Gestión poderosa.</p>
+      </div>
+    </div>
+
   </div>
 </template>

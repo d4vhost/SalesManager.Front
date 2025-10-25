@@ -14,29 +14,28 @@ const handleLogout = () => {
     <nav class="sidebar">
       <div class="sidebar-header">
         <RouterLink to="/app" class="sidebar-brand">
-          <font-awesome-icon :icon="['fas', 'fa-chart-line']" />
+          <font-awesome-icon :icon="['fas', 'fa-chart-pie']" />
           SalesManager
         </RouterLink>
       </div>
       <ul class="nav-links">
         <li>
           <RouterLink to="/app/pos">
-            <font-awesome-icon :icon="['fas', 'fa-rocket']" />
+            <font-awesome-icon :icon="['fas', 'fa-shopping-cart']" />
             Punto de Venta
           </RouterLink>
         </li>
-        
         <li v-if="authStore.isAdmin">
           <RouterLink to="/app/admin">
-            <font-awesome-icon :icon="['fas', 'fa-user-lock']" />
-            Admin Dashboard
+            <font-awesome-icon :icon="['fas', 'fa-shield-alt']" />
+            Administración
           </RouterLink>
         </li>
       </ul>
       <div class="sidebar-footer">
         <span class="user-email">{{ authStore.userEmail }}</span>
         <button @click="handleLogout" class="btn-logout">
-          <font-awesome-icon :icon="['fas', 'fa-sign-in-alt']" rotation="180" />
+          <font-awesome-icon :icon="['fas', 'fa-sign-out-alt']" />
           Cerrar Sesión
         </button>
       </div>

@@ -10,31 +10,33 @@ import HomeView from '@/views/HomeView.vue'
 import LoginView from '@/views/LoginView.vue'
 import PosView from '@/views/PosView.vue'
 import AdminDashboard from '@/views/AdminDashboard.vue'
-// (Puedes añadir más imports aquí, ej: import AdminProducts from '@/views/admin/AdminProducts.vue')
 
 
 const routes = [
   {
-    // --- Rutas Públicas (Home, Login) ---
+    // --- Ruta Pública (Home) ---
+    // Esta usa el PublicLayout (con Header y Footer)
     path: '/',
-    component: PublicLayout, // Usan el layout con Navbar y Footer
+    component: PublicLayout,
     children: [
       { 
         path: '', 
         name: 'Home', 
         component: HomeView 
-      },
-      { 
-        path: 'login', 
-        name: 'Login', 
-        component: LoginView 
       }
     ]
   },
   {
+    // --- Ruta de Login (Sin Layout) ---
+    // Esta es una ruta de nivel superior, por eso no tiene header/footer
+    path: '/login',
+    name: 'Login',
+    component: LoginView,
+  },
+  {
     // --- Rutas Privadas (App, POS, Admin) ---
     path: '/app', // Prefijo para todas las rutas autenticadas
-    component: AppLayout, // Usan el layout con la barra lateral
+    component: AppLayout, // Usa el layout con la barra lateral
     meta: { requiresAuth: true }, // Requiere login para todo este grupo
     children: [
       {
@@ -52,9 +54,6 @@ const routes = [
         component: AdminDashboard,
         meta: { requiresAdmin: true } // Esta ruta específica requiere rol de Admin
       }
-      // Ejemplo de más rutas de admin:
-      // { path: 'admin/products', name: 'AdminProducts', component: AdminProducts, meta: { requiresAdmin: true } },
-      // { path: 'admin/users', name: 'AdminUsers', component: AdminUsers, meta: { requiresAdmin: true } },
     ]
   },
   // Redirigir cualquier ruta 404 a la página de Home
@@ -74,6 +73,7 @@ const router = createRouter({
 
 // --- Guardia de Navegación (Seguridad de Rutas) ---
 router.beforeEach((to, from, next) => {
+  // Asegúrate de que el store de Pinia esté listo
   const authStore = useAuthStore();
 
   // 1. Si la ruta requiere ser Admin y el usuario no lo es
@@ -86,11 +86,11 @@ router.beforeEach((to, from, next) => {
     next({ name: 'Login' }); // Redirige al Login
   
   // 3. Si el usuario está logueado e intenta ir al Login o al Home
-  } else if ((to.path === '/login' || to.path === '/') && authStore.isAuthenticated) {
-    next({ name: 'POS' }); // Redirige al POS (su página de inicio logueado)
+  } else if ((to.name === 'Login' || to.name === 'Home') && authStore.isAuthenticated) {
+    next({ path: '/app/pos' }); // Redirige al POS
   
   } else {
-    // Todo bien, permite la navegación
+    // Todo bien
     next();
   }
 });
