@@ -1,12 +1,12 @@
 /* src/styles/home.css */
 
-/* --- 1. Hero con Imagen de Fondo y Texto Superpuesto --- */
+/* --- 1. Hero (sin cambios) --- */
 .hero-main {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 60vh; /* 60% de la altura de la ventana */
+  height: 60vh;
   min-height: 400px;
   padding: 2rem;
   color: var(--color-surface);
@@ -21,11 +21,9 @@
   height: 100%;
   object-fit: cover;
   z-index: 1;
-  /* Imagen de Unsplash: Caja registradora / tienda */
   background-image: url('https://images.unsplash.com/photo-1556740738-b6a63e27c4df?q=80&w=1770&auto=format&fit=crop');
   background-position: center center;
   background-size: cover;
-  /* Efecto de filtro oscuro */
   filter: brightness(0.4);
 }
 .hero-content {
@@ -40,33 +38,39 @@
   line-height: 1.15;
   margin-bottom: 1.5rem;
   letter-spacing: -1px;
-  color: var(--color-surface); /* Texto blanco */
+  color: var(--color-surface);
 }
 .hero-subtitle {
   font-size: 1.3rem;
   margin-bottom: 2.5rem;
   line-height: 1.7;
-  color: rgba(255, 255, 255, 0.85); /* Texto blanco semi-transparente */
+  color: rgba(255, 255, 255, 0.85);
 }
 .hero-cta .btn {
-  font-size: 1.1rem;
-  padding: 0.9rem 2.5rem;
+  font-size: 1rem;
+  padding: 0.8rem 2rem;
 }
 
-/* --- 2. Sección Split 50/50 --- */
+/* --- 2. Sección Split 60/40 --- */
 .split-section {
   display: flex;
-  flex-wrap: wrap; /* Para que sea responsivo en móviles */
+  flex-wrap: wrap;
   background-color: var(--color-surface);
-  border-bottom: 1px solid var(--color-border-light);
+  margin-top: 5rem;
+  width: 90%;
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
 }
-.split-content,
-.split-image {
-  flex: 1 1 50%; /* Cada uno ocupa el 50% */
-  min-width: 320px; /* Ancho mínimo antes de apilarse */
-}
+
+/* --- CAMBIO: Separadas las reglas de .split-content y .split-image --- */
+
 .split-content {
-  padding: 5rem 4rem;
+  /* --- CAMBIO: Ancho al 60% --- */
+  flex: 1 1 60%;
+  min-width: 320px;
+  align-self: center;
+  padding: 2rem 2rem; 
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -81,14 +85,20 @@
   font-size: 1.1rem;
   line-height: 1.8;
 }
+
 .split-image {
-  background-image: url('https://images.unsplash.com/photo-1601597111158-2f9e1501d315?q=80&w=1887&auto=format&fit=crop'); /* Imagen de Unsplash: iPad POS */
+  /* --- CAMBIO: Ancho al 40% --- */
+  flex: 1 1 40%;
+  min-width: 300px; /* Un min-width más pequeño para el 40% */
+  align-self: center;
+  background-image: url('https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1740&auto=format&fit=crop');
   background-size: cover;
   background-position: center;
-  min-height: 400px;
+  /* Altura que te gustó */
+  min-height: 270px; 
 }
 
-/* --- 3. Sección de Características (Estilo "WordPress" sin bordes/sombras) --- */
+/* --- 3. Sección de Características (sin cambios) --- */
 .features-section {
   padding: 5rem 0;
   text-align: center;
@@ -110,13 +120,17 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 3rem;
+  align-items: stretch;
 }
 .feature-card {
   background: var(--color-surface);
   padding: 2rem;
   text-align: left;
-  border-left: 4px solid var(--color-primary); /* Borde lateral estilo "antiguo" */
-  background-color: #fdfdfd;
+  border-left: 4px solid var(--color-primary);
+  background-color: #f7f7ff;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 .feature-icon {
   font-size: 2rem;
@@ -132,7 +146,7 @@
   line-height: 1.6;
 }
 
-/* --- Animación --- */
+/* --- Animación (sin cambios) --- */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(15px); }
   to { opacity: 1; transform: translateY(0); }
@@ -142,7 +156,24 @@
 @media (max-width: 992px) {
   .hero-title { font-size: 2.8rem; }
   .hero-subtitle { font-size: 1.15rem; }
-  .split-section { flex-direction: column-reverse; } /* Imagen arriba en móvil */
-  .split-content { padding: 3rem 2rem; }
-  .features-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .split-section { 
+    flex-direction: column-reverse; 
+    margin-top: 3rem; 
+    width: 90%;
+  }
+  .split-content { 
+    padding: 2rem 0; 
+    /* Se reajusta a 100% en móvil */
+    flex-basis: 100%;
+  }
+  .split-image { 
+    /* Se reajusta a 100% en móvil */
+    flex-basis: 100%;
+    min-height: 150px; 
+  }
+  .features-grid { 
+    grid-template-columns: 1fr; 
+    gap: 2rem; 
+  }
+  .features-section { padding: 3rem 0; }
 }

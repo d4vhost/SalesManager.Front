@@ -61,7 +61,7 @@ const handleLogin = async () => {
             />
           </div>
 
-          <button type="submit" class="btn btn-primary btn-block btn-lg">
+          <button type="submit" class="btn btn-primary btn-block">
             Ingresar
           </button>
         </form>
