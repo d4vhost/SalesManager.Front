@@ -1,25 +1,41 @@
 /* src/styles/navbar.css */
 .navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 2rem;
-  background-color: var(--color-surface);
-  box-shadow: var(--shadow-md);
-  position: sticky; /* Se mantiene arriba */
+  width: 100%;
+  padding: 1.5rem 0; /* Más alto */
+  background-color: rgba(255, 255, 255, 0.8); /* Blanco semi-transparente */
+  backdrop-filter: blur(12px); /* Efecto "glassmorphism" estilo Apple */
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
   top: 0;
   z-index: 1000;
 }
 
-.navbar-brand {
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: var(--color-primary);
-  text-decoration: none;
+.navbar-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.navbar-nav .nav-link {
-  font-size: 1rem;
-  font-weight: 500;
-  padding: 0.5rem 1rem;
+.navbar-brand {
+  font-size: 1.75rem;
+  font-weight: 800; /* Más grueso */
+  color: var(--color-text); /* Negro, no azul */
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.navbar-brand .fa-chart-line {
+  color: var(--color-primary); /* Icono sí es azul */
+}
+.navbar-brand:hover {
+  color: var(--color-primary);
+}
+
+.navbar-nav .btn {
+  font-weight: 600;
+  padding: 0.6rem 1.2rem;
+  font-size: 0.95rem;
 }

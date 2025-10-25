@@ -1,14 +1,20 @@
 <script setup>
 import { RouterLink } from 'vue-router'
-// Importa los estilos CSS para este componente
-import '@/styles/navbar.css'
 </script>
 
 <template>
   <nav class="navbar">
-    <RouterLink to="/" class="navbar-brand">SalesManager</RouterLink>
-    <div class="navbar-nav">
-      <RouterLink to="/login" class="btn btn-outline">Iniciar Sesión</RouterLink>
+    <div class="container navbar-content">
+      <RouterLink to="/" class="navbar-brand">
+        <font-awesome-icon :icon="['fas', 'fa-chart-line']" />
+        SalesManager
+      </RouterLink>
+      <div class="navbar-nav">
+        <RouterLink to="/login" class="btn btn-primary">
+          <font-awesome-icon :icon="['fas', 'fa-sign-in-alt']" />
+          Iniciar Sesión
+        </RouterLink>
+      </div>
     </div>
   </nav>
 </template>
