@@ -1,0 +1,24 @@
+/* src/styles/layout.css */
+/* --- Public Layout --- */
+.public-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+.public-content {
+  flex-grow: 1; /* Empuja el footer hacia abajo */
+}
+
+/* --- Private Layout (AppLayout) --- */
+.app-layout {
+  display: flex;
+  height: 100vh;
+  overflow: hidden; /* Evita scroll en la página principal */
+}
+.main-content {
+  flex-grow: 1;
+  padding: 2.5rem;
+  background-color: var(--color-background);
+  overflow-y: auto; /* Permite scroll solo en el área de contenido */
+  height: 100vh;
+}

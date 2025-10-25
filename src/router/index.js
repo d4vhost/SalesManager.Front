@@ -1,71 +1,96 @@
-import { createRouter, createWebHistory } from 'vue-router';
-import { useAuthStore } from '@/stores/authStore';
+import { createRouter, createWebHistory } from 'vue-router'
+import { useAuthStore } from '@/stores/authStore'
 
-// Importa las vistas (componentes de página)
-// (Aún no las hemos creado, pero las definimos aquí)
-// import LoginView from '@/views/LoginView.vue';
-// import PosView from '@/views/PosView.vue';
-// import AdminDashboard from '@/views/AdminDashboard.vue';
+// Importa los Layouts
+import PublicLayout from '@/layouts/PublicLayout.vue'
+import AppLayout from '@/layouts/AppLayout.vue'
 
-// Por ahora, usamos componentes placeholder
-const LoginView = { template: '<div>Página de Login</div>' };
-const PosView = { template: '<div>Página de Punto de Venta (POS)</div>' };
-const AdminDashboard = { template: '<div>Panel de Administración</div>' };
+// Importa las Vistas (Páginas)
+import HomeView from '@/views/HomeView.vue'
+import LoginView from '@/views/LoginView.vue'
+import PosView from '@/views/PosView.vue'
+import AdminDashboard from '@/views/AdminDashboard.vue'
+// (Puedes añadir más imports aquí, ej: import AdminProducts from '@/views/admin/AdminProducts.vue')
+
 
 const routes = [
   {
-    path: '/login',
-    name: 'Login',
-    component: LoginView,
+    // --- Rutas Públicas (Home, Login) ---
+    path: '/',
+    component: PublicLayout, // Usan el layout con Navbar y Footer
+    children: [
+      { 
+        path: '', 
+        name: 'Home', 
+        component: HomeView 
+      },
+      { 
+        path: 'login', 
+        name: 'Login', 
+        component: LoginView 
+      }
+    ]
   },
   {
-    path: '/pos',
-    name: 'POS',
-    component: PosView,
-    meta: { requiresAuth: true } // Esta ruta requiere login
+    // --- Rutas Privadas (App, POS, Admin) ---
+    path: '/app', // Prefijo para todas las rutas autenticadas
+    component: AppLayout, // Usan el layout con la barra lateral
+    meta: { requiresAuth: true }, // Requiere login para todo este grupo
+    children: [
+      {
+        path: '',
+        redirect: '/app/pos' // Redirige /app a /app/pos
+      },
+      {
+        path: 'pos',
+        name: 'POS',
+        component: PosView,
+      },
+      {
+        path: 'admin',
+        name: 'Admin',
+        component: AdminDashboard,
+        meta: { requiresAdmin: true } // Esta ruta específica requiere rol de Admin
+      }
+      // Ejemplo de más rutas de admin:
+      // { path: 'admin/products', name: 'AdminProducts', component: AdminProducts, meta: { requiresAdmin: true } },
+      // { path: 'admin/users', name: 'AdminUsers', component: AdminUsers, meta: { requiresAdmin: true } },
+    ]
   },
-  {
-    path: '/admin',
-    name: 'Admin',
-    component: AdminDashboard,
-    meta: { requiresAuth: true, requiresAdmin: true } // Requiere login Y ser Admin
-  },
-  // Redirigir cualquier ruta desconocida al login o al POS
+  // Redirigir cualquier ruta 404 a la página de Home
   {
     path: '/:pathMatch(.*)*',
-    redirect: '/pos'
-  },
-  // Redirigir la ruta raíz
-  {
-    path: '/',
-    redirect: '/pos'
+    redirect: '/'
   }
 ];
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
+  // Clases CSS para los links activos en la navegación
+  linkActiveClass: 'router-link-active',
+  linkExactActiveClass: 'router-link-exact-active',
 });
 
-// Guardia de Navegación (Navigation Guard)
-// Se ejecuta ANTES de cargar cualquier página
+// --- Guardia de Navegación (Seguridad de Rutas) ---
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore();
 
-  // Si la ruta requiere admin y el usuario no es admin
+  // 1. Si la ruta requiere ser Admin y el usuario no lo es
   if (to.meta.requiresAdmin && !authStore.isAdmin) {
-    _logger.LogWarn('Acceso denegado a ruta de admin');
-    next('/pos'); // Redirigir a POS (o a una página de "No autorizado")
+    console.warn('Acceso denegado: Se requiere rol de Admin.');
+    next({ name: 'POS' }); // Redirige al POS
   
-  // Si la ruta requiere autenticación y el usuario no está logueado
+  // 2. Si la ruta requiere login (ej. /app/...) y el usuario no está logueado
   } else if (to.meta.requiresAuth && !authStore.isAuthenticated) {
-    next('/login'); // Redirigir al Login
+    next({ name: 'Login' }); // Redirige al Login
   
-  // Si el usuario está logueado e intenta ir al Login
-  } else if (to.path === '/login' && authStore.isAuthenticated) {
-    next('/pos'); // Redirigir al POS
+  // 3. Si el usuario está logueado e intenta ir al Login o al Home
+  } else if ((to.path === '/login' || to.path === '/') && authStore.isAuthenticated) {
+    next({ name: 'POS' }); // Redirige al POS (su página de inicio logueado)
+  
   } else {
-    // En cualquier otro caso, permite la navegación
+    // Todo bien, permite la navegación
     next();
   }
 });

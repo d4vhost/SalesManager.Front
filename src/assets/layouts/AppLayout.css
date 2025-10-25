@@ -1,0 +1,85 @@
+/* Estilos para el Layout Principal */
+
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 250px;
+  background-color: #343a40; /* Color oscuro para la barra lateral */
+  color: #f8f9fa;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0; /* Evita que se encoja */
+}
+
+.sidebar-header {
+  padding: 1.5rem;
+  text-align: center;
+  font-size: 1.5rem;
+  border-bottom: 1px solid #495057;
+}
+
+.nav-links {
+  list-style: none;
+  margin: 0;
+  padding: 1rem 0;
+  flex-grow: 1; /* Empuja el footer hacia abajo */
+}
+
+.nav-links li a {
+  display: block;
+  padding: 0.75rem 1.5rem;
+  color: #adb5bd;
+  text-decoration: none;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.nav-links li a:hover {
+  background-color: #495057;
+  color: #ffffff;
+}
+
+/* Estilo para el link activo (Vue Router añade esta clase) */
+.nav-links li a.router-link-exact-active {
+  background-color: var(--color-primary);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.sidebar-footer {
+  padding: 1.5rem;
+  border-top: 1px solid #495057;
+  text-align: center;
+}
+
+.user-email {
+  display: block;
+  font-size: 0.9rem;
+  color: #ced4da;
+  margin-bottom: 1rem;
+  word-wrap: break-word;
+}
+
+.btn-logout {
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 0.9rem;
+  background-color: var(--color-error);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-logout:hover {
+  opacity: 0.9;
+}
+
+.main-content {
+  flex-grow: 1; /* Ocupa el resto del espacio */
+  padding: 2rem;
+  background-color: var(--color-background);
+  overflow-y: auto; /* Permite scroll si el contenido es largo */
+}

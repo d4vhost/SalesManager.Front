@@ -1,14 +1,17 @@
-import './assets/main.css' // Estilos base
-
 import { createApp } from 'vue'
-import { createPinia } from 'pinia' // Importa Pinia
+import { createPinia } from 'pinia'
 
 import App from './App.vue'
-import router from './router' // Importa el Router que crearemos
+import router from './router'
+
+// --- IMPORTACIÓN DE CSS ---
+import './styles/base.css'    
+import './styles/layout.css' 
+// --------------------------
 
 const app = createApp(App)
 
-app.use(createPinia()) // 1. Usa Pinia (para manejo de estado)
-app.use(router) // 2. Usa el Router (para manejo de páginas)
+app.use(createPinia())
+app.use(router)
 
-app.mount('#app') // Monta la aplicación
+app.mount('#app')
