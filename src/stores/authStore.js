@@ -1,73 +1,98 @@
+// src/stores/authStore.js
 import { defineStore } from 'pinia';
 import apiService from '@/services/apiService';
-import router from '@/router'; // Importa el router para redirigir
+import router from '@/router';
+import { jwtDecode } from 'jwt-decode'; //
 
-// Define el "store" de autenticación
 export const useAuthStore = defineStore('auth', {
-  // 1. Estado (Datos que guardamos)
   state: () => ({
-    // Intenta cargar el token y el usuario desde localStorage al iniciar
     token: localStorage.getItem('token') || null,
     userEmail: localStorage.getItem('userEmail') || null,
-    userRoles: JSON.parse(localStorage.getItem('userRoles')) || [],
+    userRoles: JSON.parse(localStorage.getItem('userRoles') || '[]'),
   }),
 
-  // 2. Getters (Propiedades calculadas)
   getters: {
     isAuthenticated: (state) => !!state.token,
-    isAdmin: (state) => state.userRoles.includes('Admin'), // Verifica si el usuario es Admin
+    // Verifica si 'Admin' está en la lista de roles
+    isAdmin: (state) => Array.isArray(state.userRoles) && state.userRoles.includes('Admin'),
   },
 
-  // 3. Actions (Métodos para cambiar el estado)
   actions: {
     async login(credentials) {
       try {
-        const response = await apiService.login(credentials);
-        
-        // Extraemos los datos del token (si tu API los devuelve)
-        // O asumiendo que response.data.token es el JWT
-        const token = response.data.token;
-        const userEmail = credentials.email; // O decodifica el token para obtener el email/roles
-        
-        // TODO: Decodificar el token para obtener los roles
-        // const decodedToken = ...
-        // const roles = decodedToken.roles;
-        // Por ahora, simulamos roles si el email es 'admin@admin.com'
-        const roles = userEmail === 'admin@admin.com' ? ['Admin', 'Usuario'] : ['Usuario'];
+        const response = await apiService.login(credentials); //
+        const token = response.data.token; //
 
-        // Guardar en el estado de Pinia
+        let roles = [];
+        let userEmail = '';
+
+        if (token) {
+          try {
+            const decodedToken = jwtDecode(token);
+
+            // --- Lógica de extracción de roles MÁS ROBUSTA ---
+            // Busca el claim estándar de roles de ASP.NET Core Identity
+            const roleClaim = decodedToken['role'];
+
+            if (Array.isArray(roleClaim)) {
+              // Si ya es un array (múltiples roles)
+              roles = roleClaim;
+            } else if (typeof roleClaim === 'string') {
+              // Si es un string (un solo rol)
+              roles = [roleClaim];
+            } else {
+              // Fallback: Si no se encuentra el claim o no es string/array
+              console.warn("No se encontró el claim de roles estándar en el token. Asignando rol 'Usuario'.");
+              roles = ['Usuario'];
+            }
+            // --- Fin lógica de roles ---
+
+            // Obtiene el email (sin cambios)
+            userEmail = decodedToken.email || decodedToken.sub || credentials.email; //
+
+          } catch (decodeError) {
+            console.error("Error decodificando el token:", decodeError);
+            roles = ['Usuario']; // Fallback en caso de error de decodificación
+            userEmail = credentials.email;
+          }
+        } else {
+          throw new Error("No se recibió token del servidor.");
+        }
+
+        // Guardar en el estado y localStorage (sin cambios)
         this.token = token;
         this.userEmail = userEmail;
         this.userRoles = roles;
-
-        // Guardar en localStorage para persistir el login
         localStorage.setItem('token', token);
         localStorage.setItem('userEmail', userEmail);
         localStorage.setItem('userRoles', JSON.stringify(roles));
 
-        // Redirigir al Punto de Venta (POS)
-        router.push('/pos');
+        // Redirección basada en rol (ahora debería usar los roles correctos)
+        if (this.isAdmin) {
+          router.push('/app/admin'); //
+        } else {
+          router.push('/app/pos'); //
+        }
 
       } catch (error) {
         console.error('Error en login:', error.response?.data?.message || error.message);
-        // Lanza el error para que el componente Login lo atrape
-        throw new Error(error.response?.data?.message || 'Error al iniciar sesión');
+        this.logoutCleanup();
+        throw new Error(error.response?.data?.message || 'Error al iniciar sesión. Verifique sus credenciales.');
       }
     },
 
     logout() {
-      // Limpiar el estado de Pinia
+      this.logoutCleanup();
+      router.push('/login'); //
+    },
+
+    logoutCleanup() {
       this.token = null;
       this.userEmail = null;
       this.userRoles = [];
-
-      // Limpiar localStorage
       localStorage.removeItem('token');
       localStorage.removeItem('userEmail');
       localStorage.removeItem('userRoles');
-
-      // Redirigir al Login
-      router.push('/login');
-    },
+    }
   },
 });
