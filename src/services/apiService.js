@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useAuthStore } from '@/stores/authStore'; // Importa el store de auth (que crearemos)
+import { useAuthStore } from '@/stores/authStore'; // Importa el store de auth
 
 // 1. Obtiene la URL base de tu backend desde el archivo .env
 const baseURL = import.meta.env.VITE_API_BASE_URL;
@@ -13,8 +13,6 @@ const api = axios.create({
 });
 
 // 3. Interceptor (¡MUY IMPORTANTE!)
-// Esto "intercepta" cada petición ANTES de que se envíe
-// y le adjunta el token JWT si estamos logueados.
 api.interceptors.request.use(
   (config) => {
     const authStore = useAuthStore(); // Accede al store de Pinia
@@ -35,18 +33,20 @@ api.interceptors.request.use(
 export default {
   // --- Auth Endpoints ---
   login(credentials) {
-    return api.post('/Auth/login', credentials); // Llama a POST /api/Auth/login
+    return api.post('/Auth/login', credentials);
   },
   register(userInfo) {
-    return api.post('/Auth/register', userInfo); // Llama a POST /api/Auth/register
+    return api.post('/Auth/register', userInfo);
   },
   // (Puedes añadir aquí los endpoints de /api/Auth/users, /api/Auth/roles, etc.)
 
   // --- Products Endpoints ---
-  getProducts(searchTerm = '', page = 1, pageSize = 10) {
-    return api.get(`/Products`, {
-      params: { searchTerm, pageNumber: page, pageSize }
-    }); // Llama a GET /api/Products con query params
+  getProducts(searchTerm = '', page = 1, pageSize = 10, categoryId = null) { // Añadido categoryId
+    const params = { searchTerm, pageNumber: page, pageSize };
+    if (categoryId && categoryId > 0) { // Enviar solo si es válido y no es "Todas"
+         params.categoryId = categoryId;
+    }
+    return api.get(`/Products`, { params }); // Pasar params actualizados
   },
   getSellableProducts() {
     return api.get('/Products/sellable'); // Llama a GET /api/Products/sellable
@@ -56,15 +56,22 @@ export default {
   getCustomers(searchTerm = '', page = 1, pageSize = 10) {
     return api.get(`/Customers`, {
       params: { searchTerm, pageNumber: page, pageSize }
-    }); // Llama a GET /api/Customers
+    });
   },
+
+  // --- Categories Endpoint (NUEVO) ---
+   getCategories(searchTerm = '', page = 1, pageSize = 100) { // Asumimos tamaño grande para obtener todas las relevantes
+       return api.get(`/Categories`, {
+         params: { searchTerm, pageNumber: page, pageSize }
+       });
+   },
 
   // --- Orders Endpoints ---
   createOrder(orderData) {
-    return api.post('/Orders', orderData); // Llama a POST /api/Orders
+    return api.post('/Orders', orderData);
   },
   getOrderDetails(orderId) {
-    return api.get(`/Orders/${orderId}`); // Llama a GET /api/Orders/{id}
+    return api.get(`/Orders/${orderId}`);
   },
   getOrderPdf(orderId) {
     return api.get(`/Orders/${orderId}/pdf`, {
