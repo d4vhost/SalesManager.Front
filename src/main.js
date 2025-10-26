@@ -4,11 +4,13 @@ import { createPinia } from 'pinia'
 // --- 1. Importar Font Awesome ---
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-// --- Importa los iconos específicos que usaremos ---
-import { 
-    faStore, faFileInvoiceDollar, faUsers, faBoxOpen, 
+
+import {
+    faStore, faFileInvoiceDollar, faUsers, faBoxOpen,
     faArrowRight, faArrowLeft, faChartPie, faSignOutAlt,
-    faBolt // <-- ¡AÑADIR ESTE!
+    faBolt,
+    faShoppingCart, 
+    faShieldAlt     
 } from '@fortawesome/free-solid-svg-icons'
 
 // --- 2. Importar Vistas y Router ---
@@ -24,11 +26,12 @@ import './styles/home.css'
 import './styles/login.css'
 
 // --- 4. Configurar App ---
-// Añade los iconos a la librería
 library.add(
-    faStore, faFileInvoiceDollar, faUsers, faBoxOpen, 
+    faStore, faFileInvoiceDollar, faUsers, faBoxOpen,
     faArrowRight, faArrowLeft, faChartPie, faSignOutAlt,
-    faBolt // <-- ¡AÑADIR ESTE!
+    faBolt,
+    faShoppingCart, 
+    faShieldAlt     
 )
 
 const app = createApp(App)
@@ -37,5 +40,4 @@ app.use(createPinia())
 app.use(router)
 
 app.component('font-awesome-icon', FontAwesomeIcon)
-
 app.mount('#app')

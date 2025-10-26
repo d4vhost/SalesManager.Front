@@ -31,8 +31,7 @@ export const useAuthStore = defineStore('auth', {
             const decodedToken = jwtDecode(token);
 
             // --- Lógica de extracción de roles MÁS ROBUSTA ---
-            // Busca el claim estándar de roles de ASP.NET Core Identity
-            const roleClaim = decodedToken['role'];
+            const roleClaim = decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
 
             if (Array.isArray(roleClaim)) {
               // Si ya es un array (múltiples roles)

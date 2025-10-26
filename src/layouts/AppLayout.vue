@@ -19,13 +19,13 @@ const handleLogout = () => {
         </RouterLink>
       </div>
       <ul class="nav-links">
-        <li>
+        <li v-if="!authStore.isAdmin">
           <RouterLink to="/app/pos">
             <font-awesome-icon :icon="['fas', 'fa-shopping-cart']" />
             Punto de Venta
           </RouterLink>
         </li>
-        <li v-if="authStore.isAdmin">
+         <li v-if="authStore.isAdmin">
           <RouterLink to="/app/admin">
             <font-awesome-icon :icon="['fas', 'fa-shield-alt']" />
             Administración
