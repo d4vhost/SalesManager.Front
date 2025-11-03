@@ -1,0 +1,66 @@
+/* src/styles/invoice.css */
+
+.invoice-view {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.invoice-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap; /* Para responsiveness */
+  gap: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.invoice-header h1 {
+  margin-bottom: 0;
+  color: var(--color-primary);
+}
+
+.invoice-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.invoice-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.customer-info p,
+.shipping-info p {
+  font-size: 0.95rem;
+  color: var(--color-text-secondary);
+  line-height: 1.8;
+  margin-bottom: 0;
+}
+
+.customer-info h3,
+.shipping-info h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  border-bottom: 2px solid var(--color-border-light);
+  padding-bottom: 0.5rem;
+}
+
+/* Reutiliza los estilos de la tabla de POS */
+/* No es necesario re-declarar .order-items-table o .totals-section */
+/* ya que están definidos globalmente en pos.css */
+
+
+/* Media Query para pantallas pequeñas */
+@media (max-width: 768px) {
+  .invoice-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .invoice-details {
+    grid-template-columns: 1fr;
+  }
+}

@@ -2,6 +2,11 @@
 import { ref, reactive, computed, watch, onMounted } from 'vue';
 import apiService from '@/services/apiService';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+// --- IMPORTACIÓN AÑADIDA ---
+import { useRouter } from 'vue-router';
+
+// --- INICIALIZACIÓN AÑADIDA ---
+const router = useRouter();
 
 const selectedCustomer = ref(null);
 const orderItems = ref([]);
@@ -195,10 +200,12 @@ function removeItem(productId) {
   orderItems.value = orderItems.value.filter(item => item.productID !== productId);
 }
 
+// --- FUNCIÓN saveOrder MODIFICADA ---
 async function saveOrder() {
   errorMessage.value = '';
-  successMessage.value = '';
+  successMessage.value = ''; // Limpia mensajes
 
+  // Validaciones existentes (perfectas)
   if (!selectedCustomer.value) {
     errorMessage.value = 'Debe seleccionar un cliente.';
     return;
@@ -225,17 +232,29 @@ async function saveOrder() {
   };
 
   try {
+    // Llama a la API para crear la orden
     const response = await apiService.createOrder(orderData);
-    successMessage.value = `Orden #${response.data.orderId} creada exitosamente.`;
+    
+    // Obtenemos el ID de la nueva orden
+    const newOrderId = response.data.orderId;
+
+    // Limpia el formulario actual (buena práctica antes de navegar)
     selectedCustomer.value = null;
     orderItems.value = [];
+    
+    // Redirige a la nueva vista de factura
+    // (Esto reemplaza la línea de successMessage.value = ...)
+    router.push({ name: 'InvoiceDetail', params: { id: newOrderId } });
+
   } catch (error) {
+    // Si falla, nos quedamos en la pantalla y mostramos el error
     errorMessage.value = error.response?.data?.message || 'Error al guardar la orden.';
     console.error(error);
   } finally {
     isLoading.value = false;
   }
 }
+// --- FIN DE LA MODIFICACIÓN ---
 
 function formatCurrency(value) {
   const numberValue = Number(value);

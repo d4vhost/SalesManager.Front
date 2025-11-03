@@ -10,6 +10,8 @@ import HomeView from '@/views/HomeView.vue'
 import LoginView from '@/views/LoginView.vue'
 import PosView from '@/views/PosView.vue'
 import AdminDashboard from '@/views/AdminDashboard.vue'
+// --- VISTA AÑADIDA ---
+import InvoiceDetailView from '@/views/InvoiceDetail.vue'
 
 
 const routes = [
@@ -48,6 +50,14 @@ const routes = [
         name: 'POS',
         component: PosView,
       },
+      // --- RUTA AÑADIDA ---
+      {
+        path: 'invoice/:id', // :id es el parámetro dinámico para el ID de la orden
+        name: 'InvoiceDetail',
+        component: InvoiceDetailView,
+        meta: { requiresAuth: true } // Requiere autenticación
+      },
+      // --- FIN RUTA AÑADIDA ---
       {
         path: 'admin',
         name: 'Admin',
