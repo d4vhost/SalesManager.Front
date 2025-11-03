@@ -283,12 +283,12 @@ onMounted(() => {
       <h2>Cliente</h2>
       <div class="customer-selection">
         <button @click="showCustomerModal = true" class="btn btn-primary">Buscar Cliente</button>
+        
         <div v-if="selectedCustomer" class="customer-info">
-          <span>ID:</span> {{ selectedCustomer.customerID }} |
           <span>Nombre:</span> {{ selectedCustomer.companyName }}
            ({{ selectedCustomer.contactName }})
         </div>
-         <div v-else class="customer-info">
+        <div v-else class="customer-info">
              <span>Ningún cliente seleccionado</span>
          </div>
       </div>
@@ -303,7 +303,6 @@ onMounted(() => {
       <table v-if="orderItems.length > 0" class="order-items-table">
         <thead>
           <tr>
-            <th>ID</th>
             <th>Producto</th>
             <th class="text-right">P. Unit.</th>
             <th class="text-center">Cantidad</th>
@@ -313,7 +312,6 @@ onMounted(() => {
         </thead>
         <tbody>
           <tr v-for="item in orderItems" :key="item.productID">
-            <td>{{ item.productID }}</td>
             <td>{{ item.productName }}</td>
             <td class="text-right">{{ formatCurrency(item.unitPrice) }}</td>
             <td class="text-center">

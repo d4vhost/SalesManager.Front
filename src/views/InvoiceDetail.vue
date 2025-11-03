@@ -120,7 +120,6 @@ onMounted(() => {
           <h3>Cliente</h3>
           <p>
             <strong>Nombre:</strong> {{ order.customerName || 'N/A' }} <br>
-            <strong>ID Cliente:</strong> {{ order.customerID }} <br>
             <strong>Fecha de Orden:</strong> {{ formatDate(order.orderDate) }}
           </p>
         </div>
@@ -139,7 +138,6 @@ onMounted(() => {
         <table class="order-items-table">
           <thead>
             <tr>
-              <th>ID</th>
               <th>Producto</th>
               <th class="text-right">P. Unit.</th>
               <th class="text-center">Cantidad</th>
@@ -148,7 +146,6 @@ onMounted(() => {
           </thead>
           <tbody>
             <tr v-for="item in order.items" :key="item.productID">
-              <td>{{ item.productID }}</td>
               <td>{{ item.productName }}</td>
               <td class="text-right">{{ formatCurrency(item.unitPrice) }}</td>
               <td class="text-center">{{ item.quantity }}</td>

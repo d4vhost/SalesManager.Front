@@ -12,9 +12,9 @@ import {
     faBolt,
     faShoppingCart, 
     faShieldAlt,
-    // --- ICONOS AÑADIDOS ---
-    faFilePdf,     // Para el botón de PDF
-    faPlusCircle   // Para el botón de "Nueva Venta"
+    faFilePdf,     
+    faPlusCircle,   
+    faFileInvoice
 } from '@fortawesome/free-solid-svg-icons'
 
 // --- 2. Importar Vistas y Router ---
@@ -29,8 +29,7 @@ import './styles/sidebar.css'
 import './styles/home.css'
 import './styles/login.css'
 import './styles/pos.css'
-// --- CSS AÑADIDO ---
-import './styles/invoice.css' // Importa los nuevos estilos de factura
+import './styles/invoice.css' 
 
 // --- 4. Configurar App ---
 library.add(
@@ -40,9 +39,9 @@ library.add(
     faShoppingCart, 
     faShieldAlt,
     faTrashAlt,
-    // --- ICONOS AÑADIDOS A LA LIBRERÍA ---
     faFilePdf,
-    faPlusCircle     
+    faPlusCircle,
+    faFileInvoice     
 )
 
 const app = createApp(App)
