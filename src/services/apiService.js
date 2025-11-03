@@ -73,6 +73,9 @@ export default {
   getOrderDetails(orderId) {
     return api.get(`/Orders/${orderId}`);
   },
+  getOrders(params) {
+    return api.get('/Orders', { params });
+  },
   getOrderPdf(orderId) {
     return api.get(`/Orders/${orderId}/pdf`, {
       responseType: 'blob', // Importante para recibir un archivo/PDF

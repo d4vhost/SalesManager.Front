@@ -12,8 +12,13 @@ const handleLogout = () => {
 <template>
   <div class="app-layout">
     <nav class="sidebar">
+      
       <div class="sidebar-header">
-        </div>
+        <RouterLink to="/app" class="sidebar-brand">
+          <font-awesome-icon :icon="['fas', 'fa-chart-pie']" />
+          SalesManager
+        </RouterLink>
+      </div>
       <ul class="nav-links">
         <li v-if="!authStore.isAdmin">
           <RouterLink to="/app/pos">
@@ -28,6 +33,7 @@ const handleLogout = () => {
             Facturas
           </RouterLink>
         </li>
+
         <li v-if="authStore.isAdmin">
           <RouterLink to="/app/admin">
             <font-awesome-icon :icon="['fas', 'fa-shield-alt']" />
@@ -35,9 +41,15 @@ const handleLogout = () => {
           </RouterLink>
         </li>
       </ul>
+
       <div class="sidebar-footer">
-        </div>
-    </nav>
+        <span class="user-email">{{ authStore.userEmail }}</span>
+        <button @click="handleLogout" class="btn-logout">
+          <font-awesome-icon :icon="['fas', 'fa-sign-out-alt']" />
+          Cerrar Sesión
+        </button>
+      </div>
+      </nav>
 
     <main class="main-content">
       <RouterView />
