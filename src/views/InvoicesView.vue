@@ -145,8 +145,9 @@ function formatDate(dateString) {
         <button @click="showCustomerModal = true" class="btn btn-primary">
           {{ selectedCustomer ? 'Cambiar Cliente' : 'Buscar Cliente' }}
         </button>
-        <div v-if="selectedCustomer" class="customer-info">
-          <span>Cliente:</span> {{ selectedCustomer.companyName }} ({{ selectedCustomer.contactName }})
+        
+                <div v-if="selectedCustomer" class="customer-info">
+          <span>Cliente:</span> {{ selectedCustomer.contactName }}
         </div>
         <div v-else class="customer-info">
           <span>Ningún cliente seleccionado</span>
@@ -169,7 +170,7 @@ function formatDate(dateString) {
       <table v-else class="order-items-table">
         <thead>
           <tr>
-            <th>Factura #</th>
+                        <th class="text-right">Factura #</th>
             <th>Cliente</th>
             <th>Fecha</th>
             <th class="text-right">Total</th>
@@ -178,7 +179,7 @@ function formatDate(dateString) {
         </thead>
         <tbody>
           <tr v-for="invoice in invoicesResult.items" :key="invoice.orderID">
-            <td>{{ invoice.orderID }}</td>
+                        <td class="text-right">{{ invoice.orderID }}</td>
             <td>{{ invoice.customerName }}</td>
             <td>{{ formatDate(invoice.orderDate) }}</td>
             <td class="text-right">{{ formatCurrency(invoice.totalAmount) }}</td>
@@ -237,7 +238,7 @@ function formatDate(dateString) {
           <div v-if="customerResults.loading" class="loading-indicator">Buscando...</div>
           <p v-else-if="!customerResults.loading && customerResults.items.length === 0" class="loading-indicator">
               No se encontraron clientes.
-          </p>
+         </p>
 
           <table v-else class="search-results-table">
             <thead>
@@ -245,7 +246,7 @@ function formatDate(dateString) {
                 <th>Nombre Contacto</th>
                 <th>Compañía</th>
                 <th>Dirección</th>
-                <th>Ciudad</th>
+             <th>Ciudad</th>
                 <th>País</th>
               </tr>
             </thead>

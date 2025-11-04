@@ -285,8 +285,7 @@ onMounted(() => {
         <button @click="showCustomerModal = true" class="btn btn-primary">Buscar Cliente</button>
         
         <div v-if="selectedCustomer" class="customer-info">
-          <span>Nombre:</span> {{ selectedCustomer.companyName }}
-           ({{ selectedCustomer.contactName }})
+          <span>Nombre:</span> {{ selectedCustomer.contactName }}
         </div>
         <div v-else class="customer-info">
              <span>Ningún cliente seleccionado</span>
