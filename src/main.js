@@ -15,11 +15,7 @@ import {
     faTrashAlt,
     faFilePdf,     
     faPlusCircle,   
-    faFileInvoice
-} from '@fortawesome/free-solid-svg-icons'
-
-// --- INICIO DE MODIFICACIÓN: Nuevos iconos para Admin ---
-import {
+    faFileInvoice,
     faPencilAlt,
     faPlus,
     faKey,
@@ -28,7 +24,9 @@ import {
     faTruck,
     faSave
 } from '@fortawesome/free-solid-svg-icons'
-// --- FIN DE MODIFICACIÓN ---
+
+// --- AÑADIR ESTE ÍCONO ---
+import { faBriefcase } from '@fortawesome/free-solid-svg-icons'
 
 // --- 2. Importar Vistas y Router ---
 import App from './App.vue'
@@ -43,7 +41,7 @@ import './styles/home.css'
 import './styles/login.css'
 import './styles/pos.css'
 import './styles/invoice.css' 
-import './styles/admin.css' // --- ARCHIVO AÑADIDO ---
+import './styles/admin.css' 
 
 // --- 4. Configurar App ---
 library.add(
@@ -57,14 +55,14 @@ library.add(
     faFilePdf,
     faPlusCircle,
     faFileInvoice,
-    // Nuevos
     faPencilAlt,
     faPlus,
     faKey,
     faUserShield,
     faTags,
     faTruck,
-    faSave
+    faSave,
+    faBriefcase
 )
 
 const app = createApp(App)

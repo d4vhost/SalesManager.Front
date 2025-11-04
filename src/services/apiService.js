@@ -35,13 +35,7 @@ export default {
   login(credentials) {
     return api.post('/Auth/login', credentials);
   },
-  // --- INICIO DE MODIFICACIÓN ---
-  // (El registro desde el admin es diferente al registro público)
-  // Usamos el endpoint de registro existente, asumiendo que el rol se asignará después
-  // o que el backend lo maneja.
   register(userInfo) {
-    // Nota: El backend /register asigna "Usuario". Para crear Admins,
-    // necesitarías un endpoint dedicado o usar assignRole después.
     return api.post('/Auth/register', userInfo);
   },
 
@@ -58,7 +52,6 @@ export default {
   unlockUser(email) {
     return api.put(`/Auth/unlock/${email}`);
   },
-  // (Opcional: endpoints de roles si los implementas)
   assignRole(assignRoleDto) {
     return api.post('/Auth/assignrole', assignRoleDto);
   },
@@ -75,10 +68,7 @@ export default {
     if (categoryId && categoryId > 0) {
          params.categoryId = categoryId;
     }
-    // NOTA: Para el Admin, idealmente tendrías un param "includeAll: true"
-    // que tu backend debería manejar para saltar el filtro de stock/discontinued.
-    // Por ahora, usará el mismo endpoint que el POS.
-    return api.get(`/Products`, { params });
+    return api.get(`/Products`, { params }); 
   },
   getProduct(id) {
     return api.get(`/Products/${id}`);
@@ -92,8 +82,6 @@ export default {
   deleteProduct(id) {
     return api.delete(`/Products/${id}`);
   },
-  // --- FIN Products ---
-
   getSellableProducts() {
     return api.get('/Products/sellable');
   },
@@ -116,10 +104,8 @@ export default {
   deleteCustomer(id) {
     return api.delete(`/Customers/${id}`);
   },
-  // --- FIN Customers ---
 
-
-  // --- Categories Endpoints ---
+  // --- Categories Endpoint ---
    getCategories(searchTerm = '', page = 1, pageSize = 100) { 
        return api.get(`/Categories`, {
          params: { searchTerm, pageNumber: page, pageSize }
@@ -137,9 +123,8 @@ export default {
   deleteCategory(id) {
     return api.delete(`/Categories/${id}`);
   },
-  // --- FIN Categories ---
 
-  // --- Suppliers Endpoints (NUEVOS) ---
+  // --- Suppliers Endpoints ---
   getSuppliers(searchTerm = '', page = 1, pageSize = 10) {
     return api.get(`/Suppliers`, {
       params: { searchTerm, pageNumber: page, pageSize }
@@ -157,7 +142,26 @@ export default {
   deleteSupplier(id) {
     return api.delete(`/Suppliers/${id}`);
   },
-  // --- FIN Suppliers ---
+  
+  // --- INICIO DE MODIFICACIÓN: Endpoints de Empleados ---
+  getEmployees(searchTerm = '', page = 1, pageSize = 10) {
+    return api.get('/Employees', {
+      params: { searchTerm, pageNumber: page, pageSize }
+    });
+  },
+  getEmployee(id) {
+    return api.get(`/Employees/${id}`);
+  },
+  createEmployee(employeeData) {
+    return api.post('/Employees', employeeData);
+  },
+  updateEmployee(id, employeeData) {
+    return api.put(`/Employees/${id}`, employeeData);
+  },
+  deleteEmployee(id) {
+    return api.delete(`/Employees/${id}`);
+  },
+  // --- FIN DE MODIFICACIÓN ---
 
   // --- Orders Endpoints ---
   createOrder(orderData) {
@@ -174,5 +178,4 @@ export default {
       responseType: 'blob', // Importante para recibir un archivo/PDF
     });
   },
-  // --- FIN DE MODIFICACIÓN ---
 };

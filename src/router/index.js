@@ -13,8 +13,11 @@ import InvoicesView from '@/views/InvoicesView.vue'
 
 // Vistas de Admin (MODIFICADO)
 import AdminDashboard from '@/views/AdminDashboard.vue'
-// Importa los nuevos componentes de gestión
+// Importa los componentes de gestión
 import AdminUsers from '@/components/admin/AdminUsers.vue'
+// --- INICIO DE MODIFICACIÓN: Importar nuevo componente ---
+import AdminEmployees from '@/components/admin/AdminEmployees.vue'
+// --- FIN DE MODIFICACIÓN ---
 import AdminProducts from '@/components/admin/AdminProducts.vue'
 import AdminCategories from '@/components/admin/AdminCategories.vue'
 import AdminCustomers from '@/components/admin/AdminCustomers.vue'
@@ -65,17 +68,23 @@ const routes = [
         meta: { requiresAuth: true }
       },
       {
-        // --- INICIO DE MODIFICACIÓN ---
         path: 'admin',
-        component: AdminDashboard, // Ahora es un layout con <RouterView>
+        component: AdminDashboard, 
         meta: { requiresAdmin: true },
-        redirect: { name: 'AdminUsers' }, // Redirige a la pestaña de Usuarios por defecto
+        redirect: { name: 'AdminUsers' }, 
         children: [
           {
             path: 'users',
             name: 'AdminUsers',
             component: AdminUsers
           },
+          // --- INICIO DE MODIFICACIÓN: Añadir ruta ---
+          {
+            path: 'employees',
+            name: 'AdminEmployees',
+            component: AdminEmployees
+          },
+          // --- FIN DE MODIFICACIÓN ---
           {
             path: 'products',
             name: 'AdminProducts',
@@ -97,7 +106,6 @@ const routes = [
             component: AdminSuppliers
           }
         ]
-        // --- FIN DE MODIFICACIÓN ---
       }
     ]
   },
