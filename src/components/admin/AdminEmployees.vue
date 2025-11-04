@@ -66,14 +66,19 @@ watch(employeeFormData, () => {
 
 function validateForm() {
   let isValid = true;
+  // Limpiar errores previos
+  Object.keys(validationErrors).forEach(key => validationErrors[key] = '');
   
-  // Email
-  const reEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!employeeFormData.email || !reEmail.test(employeeFormData.email)) {
-    validationErrors.email = 'Debe ser un correo electrónico válido.';
-    isValid = false;
+  // Email (Solo en creación)
+  if (!isEditMode.value) {
+    const reEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!employeeFormData.email || !reEmail.test(employeeFormData.email)) {
+      validationErrors.email = 'Debe ser un correo electrónico válido.';
+      isValid = false;
+    }
   }
 
+  // Campos que se validan siempre (Crear y Editar)
   if (!employeeFormData.firstName) {
     validationErrors.firstName = 'El nombre es obligatorio.';
     isValid = false;
@@ -164,13 +169,8 @@ async function openEditModal(employee) {
   modalErrorMessage.value = '';
   
   try {
-    // Necesitamos los datos completos del empleado Y su usuario
     const empResponse = await apiService.getEmployee(employee.employeeID);
     
-    // El email y el estado de bloqueo ya los tenemos de la lista
-    // La cédula la recuperamos del endpoint de AuthController
-    // NOTA: Esto es ineficiente, pero funcional.
-    // Una mejor API de backend devolvería la Cédula en GetEmployees o GetEmployee/{id}
     const userResponse = await apiService.getUsers(); 
     const userInfo = userResponse.data.find(u => u.email === employee.email);
 
@@ -195,26 +195,15 @@ async function openEditModal(employee) {
   }
 }
 
+// --- INICIO DE MODIFICACIÓN: handleSubmit (Corregido) ---
 async function handleSubmit() {
   modalErrorMessage.value = '';
   
-  // Validar Cédula y Nombre/Apellido incluso en modo edición
-  validationErrors.cedula = '';
-  validationErrors.firstName = '';
-  validationErrors.lastName = '';
-  
-  if (!employeeFormData.firstName) validationErrors.firstName = 'El nombre es obligatorio.';
-  if (!employeeFormData.lastName) validationErrors.lastName = 'El apellido es obligatorio.';
-  if (employeeFormData.cedula.length !== 10) validationErrors.cedula = 'La cédula debe tener 10 dígitos.';
-  else if (!isCedulaValid.isValid.value) validationErrors.cedula = 'La cédula no es válida.';
-
-  if (validationErrors.firstName || validationErrors.lastName || validationErrors.cedula) {
-      return; // Detiene si la validación básica falla
-  }
-
-  // La validación de email y pass es solo para creación
-  if (!isEditMode.value && !validateForm()) {
-    return;
+  // 1. Validar el formulario
+  if (!validateForm()) {
+    // ESTA LÍNEA ES LA NUEVA: Muestra un error si la validación falla
+    modalErrorMessage.value = "Por favor, corrija los errores en el formulario.";
+    return; // Detiene si la validación del frontend falla
   }
 
   try {
@@ -229,10 +218,10 @@ async function handleSubmit() {
         city: employeeFormData.city,
         country: employeeFormData.country,
       };
-      // 1. Actualiza el Empleado (y el ApplicationUser asociado via EmployeeService)
+      // 1. Actualiza el Empleado
       await apiService.updateEmployee(selectedEmployee.value.employeeID, updateDto);
       
-      // 2. Actualiza la cédula por separado (ya que está en el DTO de UpdateUser)
+      // 2. Actualiza la cédula (y nombre/apellido) en el ApplicationUser
       await apiService.updateUser(employeeFormData.email, {
         nombre: employeeFormData.firstName,
         apellido: employeeFormData.lastName,
@@ -241,7 +230,21 @@ async function handleSubmit() {
 
     } else {
       // --- Lógica de Creación ---
-      const createDto = { ...employeeFormData };
+      // El DTO debe coincidir con CreateEmployeeRequestDto.cs del backend
+      const createDto = {
+        firstName: employeeFormData.firstName,
+        lastName: employeeFormData.lastName,
+        cedula: employeeFormData.cedula,
+        title: employeeFormData.title,
+        phone: employeeFormData.phone,
+        address: employeeFormData.address,
+        city: employeeFormData.city,
+        country: employeeFormData.country,
+        email: employeeFormData.email,
+        password: employeeFormData.password,
+        // No enviamos confirmPassword, el backend no lo espera
+      };
+      
       await apiService.createEmployee(createDto);
     }
     
@@ -249,9 +252,12 @@ async function handleSubmit() {
     await loadEmployees(); // Recargar la lista
     
   } catch (error) {
-    modalErrorMessage.value = error.response?.data?.message || 'Error al guardar el empleado.';
+    // Captura el error de la API (ej: "Email ya existe")
+    modalErrorMessage.value = error.response?.data?.message || 'Error al guardar el empleado. Verifique los datos.';
+    console.error("Error en handleSubmit:", error.response?.data || error.message);
   }
 }
+// --- FIN DE MODIFICACIÓN ---
 
 async function handleUnlock(email) {
   if (!confirm(`¿Está seguro de que desea desbloquear al usuario ${email}?`)) return;
@@ -351,7 +357,6 @@ onMounted(loadEmployees);
       </tbody>
     </table>
 
-    <!-- Paginación -->
     <div class="modal-footer" v-if="!isLoading && pagination.totalPages > 0">
       <div class="modal-pagination">
         <span class="pagination-info">
@@ -368,10 +373,10 @@ onMounted(loadEmployees);
       </div>
     </div>
 
-    <!-- Modal para Crear/Editar Empleado -->
     <div v-if="showModal" class="modal-overlay" @mousedown.self="showModal = false">
-      <div class="modal-content">
-        <div class="modal-header">
+      
+      <div class="modal-content" style="max-width: 1000px;">
+      <div class="modal-header">
           <h3>{{ isEditMode ? 'Editar Empleado' : 'Crear Empleado' }}</h3>
           <button @click="showModal = false" class="modal-close-button" title="Cerrar">&times;</button>
         </div>
@@ -381,7 +386,10 @@ onMounted(loadEmployees);
             <div v-if="modalErrorMessage" class="alert-error">{{ modalErrorMessage }}</div>
             
             <div class="modal-form">
-              <!-- Datos de Login (AppUser) -->
+              <div class="form-group form-group-full">
+                <h5 style="color: var(--color-primary); border-bottom: 1px solid var(--color-border); padding-bottom: 0.5rem; margin-bottom: 1rem;">Datos de Acceso (Login)</h5>
+              </div>
+
               <div class="form-group">
                 <label for="email" class="form-label">Correo Electrónico (Login)</label>
                 <input 
@@ -408,7 +416,6 @@ onMounted(loadEmployees);
                 <small v-if="validationErrors.cedula" class="form-error-message">{{ validationErrors.cedula }}</small>
               </div>
 
-              <!-- Campos de contraseña (solo para creación) -->
               <template v-if="!isEditMode">
                 <div class="form-group">
                   <label for="password" class="form-label">Contraseña</label>
@@ -448,7 +455,10 @@ onMounted(loadEmployees);
               
               <hr class="form-group-full" style="border: 0; border-top: 1px solid var(--color-border); margin: 0.5rem 0;">
 
-              <!-- Datos de Empleado (Employee) -->
+              <div class="form-group form-group-full">
+                <h5 style="color: var(--color-primary); border-bottom: 1px solid var(--color-border); padding-bottom: 0.5rem; margin-bottom: 1rem;">Datos Personales (Empleado)</h5>
+              </div>
+
               <div class="form-group">
                 <label for="firstName" class="form-label">Nombre</label>
                 <input 

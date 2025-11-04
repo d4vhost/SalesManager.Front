@@ -9,11 +9,6 @@ import { RouterView, RouterLink } from 'vue-router';
     </div>
 
     <nav class="admin-nav">
-      <RouterLink :to="{ name: 'AdminUsers' }" class="admin-nav-link">
-        <font-awesome-icon :icon="['fas', 'fa-user-shield']" />
-        Admins
-      </RouterLink>
-
       <RouterLink :to="{ name: 'AdminEmployees' }" class="admin-nav-link">
         <font-awesome-icon :icon="['fas', 'fa-briefcase']" />
         Empleados (Ventas)

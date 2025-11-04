@@ -14,10 +14,10 @@ import InvoicesView from '@/views/InvoicesView.vue'
 // Vistas de Admin (MODIFICADO)
 import AdminDashboard from '@/views/AdminDashboard.vue'
 // Importa los componentes de gestión
-import AdminUsers from '@/components/admin/AdminUsers.vue'
-// --- INICIO DE MODIFICACIÓN: Importar nuevo componente ---
-import AdminEmployees from '@/components/admin/AdminEmployees.vue'
+// --- INICIO DE MODIFICACIÓN: Eliminar AdminUsers ---
+// import AdminUsers from '@/components/admin/AdminUsers.vue' 
 // --- FIN DE MODIFICACIÓN ---
+import AdminEmployees from '@/components/admin/AdminEmployees.vue'
 import AdminProducts from '@/components/admin/AdminProducts.vue'
 import AdminCategories from '@/components/admin/AdminCategories.vue'
 import AdminCustomers from '@/components/admin/AdminCustomers.vue'
@@ -71,20 +71,24 @@ const routes = [
         path: 'admin',
         component: AdminDashboard, 
         meta: { requiresAdmin: true },
-        redirect: { name: 'AdminUsers' }, 
+        // --- INICIO DE MODIFICACIÓN: Cambiar redirect ---
+        redirect: { name: 'AdminEmployees' }, 
+        // --- FIN DE MODIFICACIÓN ---
         children: [
+          // --- INICIO DE MODIFICACIÓN: Eliminar ruta 'users' ---
+          /*
           {
             path: 'users',
             name: 'AdminUsers',
             component: AdminUsers
           },
-          // --- INICIO DE MODIFICACIÓN: Añadir ruta ---
+          */
+          // --- FIN DE MODIFICACIÓN ---
           {
             path: 'employees',
             name: 'AdminEmployees',
             component: AdminEmployees
           },
-          // --- FIN DE MODIFICACIÓN ---
           {
             path: 'products',
             name: 'AdminProducts',
@@ -127,15 +131,15 @@ router.beforeEach((to, from, next) => {
   const authStore = useAuthStore();
 
   // --- LÓGICA DE REDIRECCIÓN DE ADMIN MEJORADA ---
-  // Si el usuario no es admin e intenta acceder a CUALQUIER ruta que empiece con /app/admin/
   if (to.matched.some(record => record.meta.requiresAdmin) && !authStore.isAdmin) {
     console.warn('Acceso denegado: Se requiere rol de Admin.');
     next({ name: 'POS' }); 
   } else if (to.meta.requiresAuth && !authStore.isAuthenticated) {
     next({ name: 'Login' }); 
   } else if ((to.name === 'Login' || to.name === 'Home') && authStore.isAuthenticated) {
-    // Redirige al dashboard correcto según el rol
-    next(authStore.isAdmin ? { name: 'AdminUsers' } : { name: 'POS' });
+    // --- INICIO DE MODIFICACIÓN: Cambiar redirect de login ---
+    next(authStore.isAdmin ? { name: 'AdminEmployees' } : { name: 'POS' });
+    // --- FIN DE MODIFICACIÓN ---
   } else {
     next();
   }
