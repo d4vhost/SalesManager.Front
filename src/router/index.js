@@ -7,9 +7,18 @@ import AppLayout from '@/layouts/AppLayout.vue'
 import HomeView from '@/views/HomeView.vue'
 import LoginView from '@/views/LoginView.vue'
 import PosView from '@/views/PosView.vue'
-import AdminDashboard from '@/views/AdminDashboard.vue'
+// Vistas de Facturas
 import InvoiceDetailView from '@/views/InvoiceDetail.vue'
 import InvoicesView from '@/views/InvoicesView.vue'
+
+// Vistas de Admin (MODIFICADO)
+import AdminDashboard from '@/views/AdminDashboard.vue'
+// Importa los nuevos componentes de gestión
+import AdminUsers from '@/components/admin/AdminUsers.vue'
+import AdminProducts from '@/components/admin/AdminProducts.vue'
+import AdminCategories from '@/components/admin/AdminCategories.vue'
+import AdminCustomers from '@/components/admin/AdminCustomers.vue'
+import AdminSuppliers from '@/components/admin/AdminSuppliers.vue'
 
 
 const routes = [
@@ -56,10 +65,39 @@ const routes = [
         meta: { requiresAuth: true }
       },
       {
+        // --- INICIO DE MODIFICACIÓN ---
         path: 'admin',
-        name: 'Admin',
-        component: AdminDashboard,
-        meta: { requiresAdmin: true } 
+        component: AdminDashboard, // Ahora es un layout con <RouterView>
+        meta: { requiresAdmin: true },
+        redirect: { name: 'AdminUsers' }, // Redirige a la pestaña de Usuarios por defecto
+        children: [
+          {
+            path: 'users',
+            name: 'AdminUsers',
+            component: AdminUsers
+          },
+          {
+            path: 'products',
+            name: 'AdminProducts',
+            component: AdminProducts
+          },
+          {
+            path: 'categories',
+            name: 'AdminCategories',
+            component: AdminCategories
+          },
+          {
+            path: 'customers',
+            name: 'AdminCustomers',
+            component: AdminCustomers
+          },
+          {
+            path: 'suppliers',
+            name: 'AdminSuppliers',
+            component: AdminSuppliers
+          }
+        ]
+        // --- FIN DE MODIFICACIÓN ---
       }
     ]
   },
@@ -79,14 +117,17 @@ const router = createRouter({
 // --- Guardia de Navegación (Seguridad de Rutas) ---
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore();
-  if (to.meta.requiresAdmin && !authStore.isAdmin) {
+
+  // --- LÓGICA DE REDIRECCIÓN DE ADMIN MEJORADA ---
+  // Si el usuario no es admin e intenta acceder a CUALQUIER ruta que empiece con /app/admin/
+  if (to.matched.some(record => record.meta.requiresAdmin) && !authStore.isAdmin) {
     console.warn('Acceso denegado: Se requiere rol de Admin.');
     next({ name: 'POS' }); 
   } else if (to.meta.requiresAuth && !authStore.isAuthenticated) {
     next({ name: 'Login' }); 
   } else if ((to.name === 'Login' || to.name === 'Home') && authStore.isAuthenticated) {
-    next({ path: '/app/pos' });
-  
+    // Redirige al dashboard correcto según el rol
+    next(authStore.isAdmin ? { name: 'AdminUsers' } : { name: 'POS' });
   } else {
     next();
   }

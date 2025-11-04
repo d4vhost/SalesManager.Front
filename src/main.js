@@ -4,18 +4,31 @@ import { createPinia } from 'pinia'
 // --- 1. Importar Font Awesome ---
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 
+// Iconos existentes
 import {
     faStore, faFileInvoiceDollar, faUsers, faBoxOpen,
     faArrowRight, faArrowLeft, faChartPie, faSignOutAlt,
     faBolt,
     faShoppingCart, 
     faShieldAlt,
+    faTrashAlt,
     faFilePdf,     
     faPlusCircle,   
     faFileInvoice
 } from '@fortawesome/free-solid-svg-icons'
+
+// --- INICIO DE MODIFICACIÓN: Nuevos iconos para Admin ---
+import {
+    faPencilAlt,
+    faPlus,
+    faKey,
+    faUserShield,
+    faTags,
+    faTruck,
+    faSave
+} from '@fortawesome/free-solid-svg-icons'
+// --- FIN DE MODIFICACIÓN ---
 
 // --- 2. Importar Vistas y Router ---
 import App from './App.vue'
@@ -30,9 +43,11 @@ import './styles/home.css'
 import './styles/login.css'
 import './styles/pos.css'
 import './styles/invoice.css' 
+import './styles/admin.css' // --- ARCHIVO AÑADIDO ---
 
 // --- 4. Configurar App ---
 library.add(
+    // Existentes
     faStore, faFileInvoiceDollar, faUsers, faBoxOpen,
     faArrowRight, faArrowLeft, faChartPie, faSignOutAlt,
     faBolt,
@@ -41,7 +56,15 @@ library.add(
     faTrashAlt,
     faFilePdf,
     faPlusCircle,
-    faFileInvoice     
+    faFileInvoice,
+    // Nuevos
+    faPencilAlt,
+    faPlus,
+    faKey,
+    faUserShield,
+    faTags,
+    faTruck,
+    faSave
 )
 
 const app = createApp(App)

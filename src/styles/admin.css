@@ -1,0 +1,214 @@
+/* src/styles/admin.css */
+
+.admin-dashboard-view {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* --- Navegación por Pestañas --- */
+.admin-nav {
+  display: flex;
+  flex-wrap: wrap;
+  border-bottom: 2px solid var(--color-primary);
+  background-color: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+  border-top: 1px solid var(--color-border-light);
+  border-left: 1px solid var(--color-border-light);
+  border-right: 1px solid var(--color-border-light);
+}
+
+.admin-nav-link {
+  padding: 1rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px; /* Alinea con el borde del contenedor */
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.admin-nav-link:hover {
+  color: var(--color-primary-dark);
+  text-decoration: none;
+  background-color: var(--color-primary-light);
+}
+
+/* Estilo para la pestaña activa */
+.admin-nav-link.router-link-exact-active {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+}
+
+.admin-content {
+  background-color: var(--color-surface);
+  padding: 1.5rem;
+  border: 1px solid var(--color-border-light);
+  box-shadow: var(--shadow-sm);
+  min-height: 400px;
+}
+
+/* --- Cabecera de las tablas CRUD --- */
+.admin-crud-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.admin-crud-header h2 {
+  margin: 0;
+}
+.admin-crud-header .form-control {
+  max-width: 350px;
+}
+.admin-crud-header .btn {
+  padding: 0.6rem 1.2rem;
+  font-size: 0.95rem;
+}
+
+/* --- Badges/Etiquetas de Estado --- */
+.badge {
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px; /* Damos un leve borde redondeado a las badges */
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.badge-success {
+  color: var(--color-primary-dark);
+  background-color: var(--color-primary-light);
+}
+.badge-danger {
+  color: #721c24;
+  background-color: #f8d7da;
+}
+.badge-secondary {
+  color: var(--color-text-secondary);
+  background-color: #f0f0f0;
+}
+
+/* --- Estilos para la tabla CRUD --- */
+/* Reutilizamos .order-items-table de pos.css */
+/* Pero añadimos botones de acción específicos */
+.action-button-group {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+.action-button-group .btn {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.9rem;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.btn-warning {
+  color: #856404;
+  background-color: #fff3cd;
+  border-color: #ffeeba;
+}
+.btn-warning:hover {
+  color: #533f03;
+  background-color: #ffe8a1;
+}
+.btn-danger {
+  color: var(--color-error);
+  background-color: #fef4f4;
+  border-color: #f5c6cb;
+}
+.btn-danger:hover {
+  color: #fff;
+  background-color: var(--color-error);
+}
+
+/* --- Formulario dentro del Modal --- */
+.modal-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 1.5rem;
+}
+
+.modal-form .form-group {
+  margin-bottom: 1rem;
+}
+
+/* Campo que ocupa todo el ancho */
+.modal-form .form-group-full {
+  grid-column: 1 / -1;
+}
+
+.modal-form .form-label {
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+}
+
+.modal-form .form-control {
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+}
+
+.modal-form .checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 0;
+}
+.modal-form .checkbox-group input {
+  width: auto;
+  height: auto;
+}
+.modal-form .checkbox-group .form-label {
+  margin: 0;
+}
+
+/* --- INICIO DE NUEVOS ESTILOS (Validación) --- */
+
+/* Mensaje de error bajo el input */
+.form-error-message {
+  font-size: 0.85rem;
+  color: var(--color-error);
+  margin-top: 0.25rem;
+  display: block;
+}
+
+/* Input con error */
+.form-control.is-invalid {
+  border-color: var(--color-error);
+}
+
+/* Medidor de contraseña */
+.password-strength-meter {
+  height: 8px;
+  background-color: #e0e0e0;
+  border-radius: 4px;
+  margin-top: 8px;
+  overflow: hidden; /* Oculta la barra interior si excede */
+}
+
+.strength-bar {
+  height: 100%;
+  transition: width 0.3s ease, background-color 0.3s ease;
+  background-color: var(--color-error);
+}
+
+/* Clases de color para la barra */
+.strength-bar.strength-danger { background-color: #e74c3c; } /* Rojo */
+.strength-bar.strength-warning { background-color: #f39c12; } /* Naranja */
+.strength-bar.strength-info { background-color: #3498db; } /* Azul */
+.strength-bar.strength-success { background-color: #2ecc71; } /* Verde */
+
+.strength-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-top: 0.25rem;
+  text-align: right;
+}
+.strength-label.label-danger { color: #e74c3c; }
+.strength-label.label-warning { color: #f39c12; }
+.strength-label.label-info { color: #3498db; }
+.strength-label.label-success { color: #2ecc71; }
+
+/* --- FIN DE NUEVOS ESTILOS --- */
