@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 // Importa las funciones de validación
 import {
   useEcuadorianCedulaValidation,
-  usePasswordStrength, // Aún lo usamos para el medidor visual, pero no para bloquear
+  usePasswordStrength, // AHORA ES CRÍTICO
   formatOnlyLetters,
   formatOnlyInteger
 } from '@/composables/useValidation.js';
@@ -65,7 +65,6 @@ watch(employeeFormData, () => {
 
 
 // --- INICIO DE MODIFICACIÓN: validateForm ---
-// Se han relajado las validaciones de email y contraseña.
 function validateForm() {
   let isValid = true;
   // Limpiar errores previos
@@ -100,10 +99,25 @@ function validateForm() {
       isValid = false;
     }
     
-    // Validación de Contraseña (solo que no esté vacía y coincida)
-    if (!employeeFormData.password) {
-        validationErrors.password = 'La contraseña es obligatoria.';
+    // --- Validación de Contraseña (Req 18) ---
+    if (!passwordStrength.value.isSecure) {
+        
+        validationErrors.password = 'La clave no cumple los requisitos.';
         isValid = false;
+
+        // Mensajes de ayuda (basados en los 'checks' que añadimos)
+        const checks = passwordStrength.value.strength.checks; // <--- CORREGIDO AQUÍ
+        let errorDetails = [];
+        if (!checks.lengthMin) errorDetails.push('Mínimo 4 caracteres.');
+        if (!checks.lengthMax) errorDetails.push('Máximo 10 caracteres.');
+        if (!checks.lowercase) errorDetails.push('Una minúscula.');
+        if (!checks.uppercase) errorDetails.push('Una mayúscula.');
+        if (!checks.number) errorDetails.push('Un número.');
+        if (!checks.special) errorDetails.push('Un caracter especial.');
+
+        // Sobrescribir el mensaje con detalles
+        validationErrors.password = `La clave debe cumplir: ${errorDetails.join(' ')}`;
+
     } else if (employeeFormData.password !== employeeFormData.confirmPassword) {
       validationErrors.confirmPassword = 'Las contraseñas no coinciden.';
       isValid = false;
@@ -353,7 +367,6 @@ onMounted(loadEmployees);
         </tr>
       </tbody>
     </table>
-
     <div class="modal-footer" v-if="!isLoading && pagination.totalPages > 0">
       <div class="modal-pagination">
         <span class="pagination-info">
@@ -369,6 +382,7 @@ onMounted(loadEmployees);
         </div>
       </div>
     </div>
+
 
     <div v-if="showModal" class="modal-overlay" @mousedown.self="showModal = false">
       
@@ -413,27 +427,37 @@ onMounted(loadEmployees);
                 <small v-if="validationErrors.cedula" class="form-error-message">{{ validationErrors.cedula }}</small>
               </div>
 
+
               <template v-if="!isEditMode">
                 <div class="form-group">
-                  <label for="password" class="form-label">Contraseña</label>
+                  <label for="password" class="form-label">Contraseña (Mín 4, Max 10)</label>
                   <input 
                     type="password" 
                     id="password" 
                     class="form-control" 
                     :class="{'is-invalid': validationErrors.password}"
                     v-model="employeeFormData.password"
-                    maxlength="8"
+                    maxlength="10" 
                     required />
                   <div class="password-strength-meter">
                     <div 
                       class="strength-bar"
-                      :class="`strength-${passwordStrength.color}`"
-                      :style="{ width: (passwordStrength.score * 20) + '%' }">
+                      :class="`strength-${passwordStrength.strength.color}`"
+                      :style="{ width: (passwordStrength.strength.score * 20) + '%' }">
                     </div>
                   </div>
-                  <div class="strength-label" :class="`label-${passwordStrength.color}`">
-                    {{ passwordStrength.label }}
+                  <div class="strength-label" :class="`label-${passwordStrength.strength.color}`">
+                    {{ passwordStrength.strength.label }}
                   </div>
+                  
+                  <div class="password-requirements">
+                    <span :class="{'completed': passwordStrength.strength.checks.lengthMin && passwordStrength.strength.checks.lengthMax}">4-10 Caracteres</span>
+                    <span :class="{'completed': passwordStrength.strength.checks.uppercase}">1 Mayúscula</span>
+                    <span :class="{'completed': passwordStrength.strength.checks.lowercase}">1 Minúscula</span>
+                    <span :class="{'completed': passwordStrength.strength.checks.number}">1 Número</span>
+                    <span :class="{'completed': passwordStrength.strength.checks.special}">1 Especial</span>
+                  </div>
+                  
                   <small v-if="validationErrors.password" class="form-error-message">{{ validationErrors.password }}</small>
                 </div>
                 <div class="form-group">
@@ -444,18 +468,16 @@ onMounted(loadEmployees);
                     class="form-control" 
                     :class="{'is-invalid': validationErrors.confirmPassword}"
                     v-model="employeeFormData.confirmPassword"
-                    maxlength="8"
+                    maxlength="10" 
                     required />
                   <small v-if="validationErrors.confirmPassword" class="form-error-message">{{ validationErrors.confirmPassword }}</small>
                 </div>
               </template>
               
               <hr class="form-group-full" style="border: 0; border-top: 1px solid var(--color-border); margin: 0.5rem 0;">
-
               <div class="form-group form-group-full">
                 <h5 style="color: var(--color-primary); border-bottom: 1px solid var(--color-border); padding-bottom: 0.5rem; margin-bottom: 1rem;">Datos Personales (Empleado)</h5>
               </div>
-
               <div class="form-group">
                 <label for="firstName" class="form-label">Nombre</label>
                 <input 
@@ -482,7 +504,6 @@ onMounted(loadEmployees);
                   required />
                 <small v-if="validationErrors.lastName" class="form-error-message">{{ validationErrors.lastName }}</small>
               </div>
-              
               <div class="form-group">
                 <label for="title" class="form-label">Cargo (Ej: Vendedor)</label>
                 <input type="text" id="title" class="form-control" v-model.trim="employeeFormData.title" maxlength="50" />
@@ -491,12 +512,10 @@ onMounted(loadEmployees);
                 <label for="phone" class="form-label">Teléfono</label>
                 <input type="text" id="phone" class="form-control" v-model.trim="employeeFormData.phone" />
               </div>
-
               <div class="form-group form-group-full">
                 <label for="address" class="form-label">Dirección</label>
                 <input type="text" id="address" class="form-control" v-model.trim="employeeFormData.address" />
               </div>
-              
               <div class="form-group">
                 <label for="city" class="form-label">Ciudad</label>
                 <input type="text" id="city" class="form-control" v-model.trim="employeeFormData.city" />
@@ -517,7 +536,9 @@ onMounted(loadEmployees);
                 
                 <button 
                   type="submit" 
-                  class="btn btn-primary">
+                  class="btn btn-primary"
+                  :disabled="!isEditMode && !passwordStrength.strength.isSecure"
+                  >
                   <font-awesome-icon :icon="['fas', 'fa-save']" />
                   {{ isEditMode ? 'Guardar Cambios' : 'Crear Empleado' }}
                 </button>
@@ -527,5 +548,5 @@ onMounted(loadEmployees);
         </form>
       </div>
     </div>
-  </div>
+    </div>
 </template>

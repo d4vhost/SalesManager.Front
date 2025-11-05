@@ -55,27 +55,59 @@ export function useEcuadorianCedulaValidation(cedula) {
 }
 
 /**
- * Valida la fortaleza de la contraseña según tus reglas.
- * (Mín 6, Max 8, mayús, minús, núm, especial)
+ * Valida la fortaleza de la contraseña según Requisito 18.
+ * (Mín 4, Max 10, mayús, minús, núm, especial)
  */
 export function usePasswordStrength(password) {
   const strength = computed(() => {
     const value = password.value || '';
     let score = 0;
-    
-    if (!value) return { score: 0, label: '', color: 'danger' };
-    
-    if (value.length >= 6) score++;
-    if (/[a-z]/.test(value)) score++;
-    if (/[A-Z]/.test(value)) score++;
-    if (/[0-9]/.test(value)) score++;
-    if (/[^a-zA-Z0-9]/.test(value)) score++; // Caracter especial
+    let checks = {
+      lengthMin: false,
+      lengthMax: true,
+      lowercase: false,
+      uppercase: false,
+      number: false,
+      special: false,
+    };
 
-    // Ajuste de score basado en longitud (min 6)
-    if (value.length < 6) score = Math.min(score, 2);
+    if (!value) {
+      // --- INICIO DE LA CORRECCIÓN ---
+      // Esta línea AHORA incluye 'checks', lo que soluciona el error 'undefined'.
+      return { score: 0, label: '', color: 'danger', isSecure: false, checks };
+      // --- FIN DE LA CORRECCIÓN ---
+    }
 
+    // 1. Validar Longitud
+    if (value.length >= 4) {
+      score++;
+      checks.lengthMin = true;
+    }
+    if (value.length > 10) {
+      checks.lengthMax = false; // Excedió el máximo
+    }
+
+    // 2. Validar Complejidad
+    if (/[a-z]/.test(value)) {
+      score++;
+      checks.lowercase = true;
+    }
+    if (/[A-Z]/.test(value)) {
+      score++;
+      checks.uppercase = true;
+    }
+    if (/[0-9]/.test(value)) {
+      score++;
+      checks.number = true;
+    }
+    if (/[^a-zA-Z0-9]/.test(value)) { // Caracter especial
+      score++;
+      checks.special = true;
+    }
+
+    // 3. Definir Label y Color
     let label = 'Muy Débil';
-    let color = 'danger'; // Color de Bootstrap/CSS
+    let color = 'danger';
 
     switch (score) {
       case 1:
@@ -84,26 +116,36 @@ export function usePasswordStrength(password) {
         color = 'warning';
         break;
       case 3:
+      case 4: // 3 y 4 son Media/Fuerte
         label = 'Media';
         color = 'info';
         break;
-      case 4:
-      case 5:
+      case 5: // 5 es Fuerte (cumple todo menos max-length)
         label = 'Fuerte';
         color = 'success';
         break;
     }
-    
-    // El requisito es poder guardar con 6 caracteres si es "segura".
-    // Definimos "segura" como un score de 3+ (longitud + 2 de: mayus, minus, num, especial)
-    // y longitud entre 6 y 8.
-    const isSecure = score >= 3 && value.length >= 6 && value.length <= 8;
 
-    return { score, label, color, isSecure };
+    // 4. Sobrescribir si falla la longitud
+    if (!checks.lengthMax) {
+      label = 'Límite 10 chars';
+      color = 'danger';
+      score = 0; // Penalizar si excede
+    } else if (!checks.lengthMin) {
+      label = 'Mín 4 chars';
+      color = 'danger';
+    }
+
+    // 5. Definir "isSecure"
+    // Debe cumplir TODAS las 5 condiciones (score 5) Y no exceder el máximo (lengthMax = true)
+    const isSecure = score === 5 && checks.lengthMax;
+
+    return { score, label, color, isSecure, checks };
   });
 
   return { strength };
 }
+
 
 // --- Helpers de Formato de Inputs ---
 
