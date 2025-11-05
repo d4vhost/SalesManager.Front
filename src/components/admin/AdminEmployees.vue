@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 // Importa las funciones de validación
 import {
   useEcuadorianCedulaValidation,
-  usePasswordStrength,
+  usePasswordStrength, // Aún lo usamos para el medidor visual, pero no para bloquear
   formatOnlyLetters,
   formatOnlyInteger
 } from '@/composables/useValidation.js';
@@ -64,20 +64,13 @@ watch(employeeFormData, () => {
 }, { deep: true });
 
 
+// --- INICIO DE MODIFICACIÓN: validateForm ---
+// Se han relajado las validaciones de email y contraseña.
 function validateForm() {
   let isValid = true;
   // Limpiar errores previos
   Object.keys(validationErrors).forEach(key => validationErrors[key] = '');
   
-  // Email (Solo en creación)
-  if (!isEditMode.value) {
-    const reEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!employeeFormData.email || !reEmail.test(employeeFormData.email)) {
-      validationErrors.email = 'Debe ser un correo electrónico válido.';
-      isValid = false;
-    }
-  }
-
   // Campos que se validan siempre (Crear y Editar)
   if (!employeeFormData.firstName) {
     validationErrors.firstName = 'El nombre es obligatorio.';
@@ -98,13 +91,20 @@ function validateForm() {
     isValid = false;
   }
 
-  // Contraseña (solo en modo creación)
+  // Validaciones solo en modo creación
   if (!isEditMode.value) {
-    if (!passwordStrength.value.isSecure) {
-      validationErrors.password = 'La contraseña debe tener 6-8 caracteres y ser segura (mayús, minús, núm, especial).';
+    
+    // Validación de Email (solo que no esté vacío)
+    if (!employeeFormData.email) {
+      validationErrors.email = 'El correo electrónico es obligatorio.';
       isValid = false;
     }
-    if (employeeFormData.password !== employeeFormData.confirmPassword) {
+    
+    // Validación de Contraseña (solo que no esté vacía y coincida)
+    if (!employeeFormData.password) {
+        validationErrors.password = 'La contraseña es obligatoria.';
+        isValid = false;
+    } else if (employeeFormData.password !== employeeFormData.confirmPassword) {
       validationErrors.confirmPassword = 'Las contraseñas no coinciden.';
       isValid = false;
     }
@@ -112,7 +112,7 @@ function validateForm() {
   
   return isValid;
 }
-// --- Fin Lógica de Validación ---
+// --- FIN DE MODIFICACIÓN ---
 
 
 async function loadEmployees() {
@@ -195,13 +195,11 @@ async function openEditModal(employee) {
   }
 }
 
-// --- INICIO DE MODIFICACIÓN: handleSubmit (Corregido) ---
 async function handleSubmit() {
   modalErrorMessage.value = '';
   
   // 1. Validar el formulario
   if (!validateForm()) {
-    // ESTA LÍNEA ES LA NUEVA: Muestra un error si la validación falla
     modalErrorMessage.value = "Por favor, corrija los errores en el formulario.";
     return; // Detiene si la validación del frontend falla
   }
@@ -257,7 +255,6 @@ async function handleSubmit() {
     console.error("Error en handleSubmit:", error.response?.data || error.message);
   }
 }
-// --- FIN DE MODIFICACIÓN ---
 
 async function handleUnlock(email) {
   if (!confirm(`¿Está seguro de que desea desbloquear al usuario ${email}?`)) return;
@@ -517,14 +514,14 @@ onMounted(loadEmployees);
               <span class="pagination-info"></span>
               <div class="pagination-controls">
                 <button type="button" class="btn" @click="showModal = false">Cancelar</button>
+                
                 <button 
                   type="submit" 
-                  class="btn btn-primary"
-                  :disabled="!isEditMode && !passwordStrength.isSecure">
+                  class="btn btn-primary">
                   <font-awesome-icon :icon="['fas', 'fa-save']" />
                   {{ isEditMode ? 'Guardar Cambios' : 'Crear Empleado' }}
                 </button>
-              </div>
+                </div>
             </div>
           </div>
         </form>
