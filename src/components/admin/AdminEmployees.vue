@@ -100,13 +100,13 @@ function validateForm() {
     }
     
     // --- Validación de Contraseña (Req 18) ---
-    if (!passwordStrength.value.isSecure) {
+    if (!passwordStrength.strength.value.isSecure) {
         
         validationErrors.password = 'La clave no cumple los requisitos.';
         isValid = false;
 
         // Mensajes de ayuda (basados en los 'checks' que añadimos)
-        const checks = passwordStrength.value.strength.checks; // <--- CORREGIDO AQUÍ
+        const checks = passwordStrength.strength.value.checks; // <--- CORREGIDO AQUÍ
         let errorDetails = [];
         if (!checks.lengthMin) errorDetails.push('Mínimo 4 caracteres.');
         if (!checks.lengthMax) errorDetails.push('Máximo 10 caracteres.');

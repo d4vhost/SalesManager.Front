@@ -71,11 +71,9 @@ export function usePasswordStrength(password) {
       special: false,
     };
 
+
     if (!value) {
-      // --- INICIO DE LA CORRECCIÓN ---
-      // Esta línea AHORA incluye 'checks', lo que soluciona el error 'undefined'.
       return { score: 0, label: '', color: 'danger', isSecure: false, checks };
-      // --- FIN DE LA CORRECCIÓN ---
     }
 
     // 1. Validar Longitud
