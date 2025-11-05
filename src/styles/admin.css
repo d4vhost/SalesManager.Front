@@ -25,7 +25,7 @@
   color: var(--color-text-secondary);
   text-decoration: none;
   border-bottom: 2px solid transparent;
-  margin-bottom: -2px; /* Alinea con el borde del contenedor */
+  margin-bottom: -2px;
   display: flex;
   align-items: center;
   gap: 0.6rem;
@@ -36,7 +36,6 @@
   background-color: var(--color-primary-light);
 }
 
-/* Estilo para la pestaña activa */
 .admin-nav-link.router-link-exact-active {
   color: var(--color-primary);
   border-bottom-color: var(--color-primary);
@@ -73,7 +72,7 @@
 /* --- Badges/Etiquetas de Estado --- */
 .badge {
   padding: 0.25rem 0.6rem;
-  border-radius: 4px; /* Damos un leve borde redondeado a las badges */
+  border-radius: 4px;
   font-size: 0.85rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -92,8 +91,6 @@
 }
 
 /* --- Estilos para la tabla CRUD --- */
-/* Reutilizamos .order-items-table de pos.css */
-/* Pero añadimos botones de acción específicos */
 .action-button-group {
   display: flex;
   gap: 0.5rem;
@@ -124,6 +121,43 @@
   background-color: var(--color-error);
 }
 
+/* --- Modal Compacto --- */
+.modal-compact .modal-body {
+  max-height: calc(85vh - 150px);
+  overflow-y: auto;
+  padding: 1rem 1.5rem;
+}
+
+.modal-compact .modal-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 1.5rem;
+}
+
+.modal-compact .modal-form .form-group {
+  margin-bottom: 0.75rem;
+}
+
+.modal-compact .form-group-full {
+  grid-column: 1 / -1;
+}
+
+.modal-compact .form-label {
+  font-size: 0.85rem;
+  margin-bottom: 0.2rem;
+  display: block;
+}
+
+.modal-compact .form-control {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.9rem;
+}
+
+.modal-compact h5 {
+  font-size: 1rem;
+  margin: 0.5rem 0;
+}
+
 /* --- Formulario dentro del Modal --- */
 .modal-form {
   display: grid;
@@ -135,7 +169,6 @@
   margin-bottom: 1rem;
 }
 
-/* Campo que ocupa todo el ancho */
 .modal-form .form-group-full {
   grid-column: 1 / -1;
 }
@@ -164,20 +197,75 @@
   margin: 0;
 }
 
-/* --- INICIO DE NUEVOS ESTILOS (Validación) --- */
+/* --- VALIDACIÓN EN TIEMPO REAL --- */
+
+/* Input con error (borde rojo) */
+.form-control.is-invalid {
+  border-color: #dc3545;
+  border-width: 2px;
+  background-color: #fff5f5;
+}
+
+.form-control.is-invalid:focus {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+/* Input válido (borde verde) */
+.form-control.is-valid {
+  border-color: #28a745;
+  border-width: 2px;
+  background-color: #f0fff4;
+}
+
+.form-control.is-valid:focus {
+  border-color: #28a745;
+  box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+}
 
 /* Mensaje de error bajo el input */
 .form-error-message {
-  font-size: 0.85rem;
-  color: var(--color-error);
+  font-size: 0.8rem;
+  color: #dc3545;
   margin-top: 0.25rem;
   display: block;
+  font-weight: 500;
 }
 
-/* Input con error */
-.form-control.is-invalid {
-  border-color: var(--color-error);
+/* --- VALIDACIÓN DE CONTRASEÑA COMPACTA --- */
+.password-requirements-compact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  margin-top: 0.5rem;
 }
+
+.password-requirements-compact span {
+  padding: 0.2rem 0.5rem;
+  background-color: #e9ecef;
+  color: #6c757d;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+  border: 1px solid #dee2e6;
+  font-weight: 500;
+}
+
+/* Requisito cumplido (verde) */
+.password-requirements-compact span.completed {
+  background-color: #d4edda;
+  color: #155724;
+  border-color: #c3e6cb;
+}
+
+/* Requisito no cumplido mientras escribe (rojo) */
+.password-requirements-compact span.failed {
+  background-color: #f8d7da;
+  color: #721c24;
+  border-color: #f5c6cb;
+}
+
+/* --- ESTILOS ANTIGUOS (Mantener compatibilidad) --- */
 
 /* Medidor de contraseña */
 .password-strength-meter {
@@ -185,7 +273,7 @@
   background-color: #e0e0e0;
   border-radius: 4px;
   margin-top: 8px;
-  overflow: hidden; /* Oculta la barra interior si excede */
+  overflow: hidden;
 }
 
 .strength-bar {
@@ -195,10 +283,10 @@
 }
 
 /* Clases de color para la barra */
-.strength-bar.strength-danger { background-color: #e74c3c; } /* Rojo */
-.strength-bar.strength-warning { background-color: #f39c12; } /* Naranja */
-.strength-bar.strength-info { background-color: #3498db; } /* Azul */
-.strength-bar.strength-success { background-color: #2ecc71; } /* Verde */
+.strength-bar.strength-danger { background-color: #e74c3c; }
+.strength-bar.strength-warning { background-color: #f39c12; }
+.strength-bar.strength-info { background-color: #3498db; }
+.strength-bar.strength-success { background-color: #2ecc71; }
 
 .strength-label {
   font-size: 0.85rem;
@@ -211,9 +299,6 @@
 .strength-label.label-info { color: #3498db; }
 .strength-label.label-success { color: #2ecc71; }
 
-/* --- FIN DE NUEVOS ESTILOS --- */
-
-/* --- INICIO DE NUEVOS ESTILOS (Req 18 Feedback) --- */
 .password-requirements {
   display: flex;
   flex-wrap: wrap;
@@ -233,4 +318,3 @@
   color: var(--color-primary-dark);
   text-decoration: line-through;
 }
-/* --- FIN DE NUEVOS ESTILOS --- */
