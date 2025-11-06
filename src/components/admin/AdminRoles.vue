@@ -115,8 +115,11 @@ async function handleSubmit() {
       await apiService.setUserRoles(selectedUser.value.email, dto);
     } 
     else if (modalMode.value === 'changePassword') {
-      // Validate password (Req 18)
-      if (!passwordStrength.value.strength.value.isSecure) {
+      
+      // --- INICIO DE LA CORRECCIÓN (Línea 119) ---
+      // Se accede a 'passwordStrength.strength.value' en lugar de 'passwordStrength.value.strength.value'
+      if (!passwordStrength.strength.value.isSecure) {
+      // --- FIN DE LA CORRECCIÓN ---
         validationErrors.newPassword = 'Password does not meet requirements.';
         return;
       }
@@ -143,7 +146,40 @@ async function handleSubmit() {
     generalSuccessMessage.value = "User account updated successfully!";
 
   } catch (error) {
-    modalErrorMessage.value = error.response?.data?.message || 'An error occurred during the update.';
+    // El debug que agregamos antes sigue siendo útil
+    console.error("DEBUG: Error completo al actualizar:", error);
+    
+    if (error.response) {
+      console.error("DEBUG: Datos de la respuesta de error:", error.response.data);
+      console.error("DEBUG: Estado del error:", error.response.status);
+
+      let detailedMessage = "Ocurrió un error. Revisa la consola (F12) para más detalles.";
+      const responseData = error.response.data;
+
+      if (responseData?.message) {
+        detailedMessage = responseData.message;
+        if (Array.isArray(responseData.errors)) {
+            const identityErrors = responseData.errors.map(e => e.description || e).join(' ');
+            detailedMessage += ` Detalles: ${identityErrors}`;
+        }
+      } else if (responseData?.errors) {
+        const validationErrors = Object.values(responseData.errors).flat().join(' ');
+        detailedMessage = `Error de validación: ${validationErrors}`;
+      } else if (typeof responseData === 'string' && (responseData.includes("Exception") || responseData.includes("error"))) {
+        detailedMessage = `Error ${error.response.status}: Error interno del servidor. Revisa la consola del backend (API).`;
+      } else if (typeof responseData === 'string') {
+        detailedMessage = responseData;
+      } else {
+        detailedMessage = 'Ocurrió un error inesperado durante la actualización.';
+      }
+      modalErrorMessage.value = detailedMessage;
+    } else if (error.request) {
+      console.error("DEBUG: La solicitud se hizo pero no hubo respuesta:", error.request);
+      modalErrorMessage.value = 'No se pudo conectar con el servidor. Revisa la red o la API.';
+    } else {
+      console.error("DEBUG: Error al configurar la solicitud:", error.message);
+      modalErrorMessage.value = `Error en el cliente: ${error.message}`;
+    }
   }
 }
 
@@ -262,6 +298,7 @@ onMounted(loadAllData);
         
         <form @submit.prevent="handleSubmit">
           <div class="modal-body">
+            
             <div v-if="modalErrorMessage" class="alert-error">{{ modalErrorMessage }}</div>
 
             <div v-if="modalMode === 'changeRole'" class="form-group">
@@ -341,7 +378,14 @@ onMounted(loadAllData);
                 <button 
                   type="submit" 
                   class="btn btn-primary"
-                  :disabled="modalMode === 'changePassword' && !passwordStrength.strength.value.isSecure">
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  >
                   <font-awesome-icon :icon="['fas', 'fa-save']" />
                   Save Changes
                 </button>
