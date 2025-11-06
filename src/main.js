@@ -28,6 +28,15 @@ import {
 // --- AÑADIR ESTE ÍCONO ---
 import { faBriefcase } from '@fortawesome/free-solid-svg-icons'
 
+// --- START OF MODIFICATION ---
+// Add new icons for user management
+import { 
+    faUserTag, 
+    faEnvelope 
+} from '@fortawesome/free-solid-svg-icons'
+// --- END OF MODIFICATION ---
+
+
 // --- 2. Importar Vistas y Router ---
 import App from './App.vue'
 import router from './router'
@@ -62,7 +71,12 @@ library.add(
     faTags,
     faTruck,
     faSave,
-    faBriefcase
+    faBriefcase,
+    
+    // --- START OF MODIFICATION ---
+    faUserTag, // New
+    faEnvelope // New
+    // --- END OF MODIFICATION ---
 )
 
 const app = createApp(App)

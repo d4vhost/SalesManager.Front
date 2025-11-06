@@ -22,6 +22,9 @@ import AdminProducts from '@/components/admin/AdminProducts.vue'
 import AdminCategories from '@/components/admin/AdminCategories.vue'
 import AdminCustomers from '@/components/admin/AdminCustomers.vue'
 import AdminSuppliers from '@/components/admin/AdminSuppliers.vue'
+// --- START OF MODIFICATION ---
+import AdminRoles from '@/components/admin/AdminRoles.vue' // <-- Import new component
+// --- END OF MODIFICATION ---
 
 
 const routes = [
@@ -108,7 +111,14 @@ const routes = [
             path: 'suppliers',
             name: 'AdminSuppliers',
             component: AdminSuppliers
+          },
+          // --- START OF MODIFICATION ---
+          {
+            path: 'roles', // <-- Add new route
+            name: 'AdminRoles',
+            component: AdminRoles
           }
+          // --- END OF MODIFICATION ---
         ]
       }
     ]

@@ -52,15 +52,27 @@ export default {
   unlockUser(email) {
     return api.put(`/Auth/unlock/${email}`);
   },
-  assignRole(assignRoleDto) {
-    return api.post('/Auth/assignrole', assignRoleDto);
+  // --- START OF MODIFICATION ---
+  // (assignRole deprecated, we use setUserRoles now)
+  getRoles() {
+    return api.get('/Auth/roles');
   },
   createRole(roleName) {
-    // El backend espera un string plano, por eso el { data: roleName }
+    // El backend espera un string plano
     return api.post('/Auth/roles', JSON.stringify(roleName), {
       headers: { 'Content-Type': 'application/json' }
     });
   },
+  setUserRoles(email, rolesDto) {
+    return api.put(`/Auth/users/${email}/set-roles`, rolesDto);
+  },
+  adminChangePassword(email, passwordDto) {
+    return api.put(`/Auth/users/${email}/admin-change-password`, passwordDto);
+  },
+  adminChangeEmail(email, emailDto) {
+    return api.put(`/Auth/users/${email}/admin-change-email`, emailDto);
+  },
+  // --- END OF MODIFICATION ---
 
   // --- Products Endpoints ---
   getProducts(searchTerm = '', page = 1, pageSize = 10, categoryId = null) {

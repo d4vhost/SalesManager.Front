@@ -29,7 +29,11 @@ import { RouterView, RouterLink } from 'vue-router';
         <font-awesome-icon :icon="['fas', 'fa-truck']" />
         Proveedores
       </RouterLink>
-    </nav>
+      <RouterLink :to="{ name: 'AdminRoles' }" class="admin-nav-link">
+        <font-awesome-icon :icon="['fas', 'fa-user-shield']" />
+        Roles
+      </RouterLink>
+      </nav>
 
     <section class="admin-content">
       <RouterView />
